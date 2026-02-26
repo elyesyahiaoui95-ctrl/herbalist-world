@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herbalist World — Encyclopédie des Plantes Médicinales</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#0d1f0e;--deep:#111d10;--bark:#1e3020;--moss:#2d4a2d;
+  --fern:#3d6b35;--leaf:#5a9a40;--sage:#7aba60;--mint:#a8d880;
+  --parchment:#f4ede0;--cream:#faf6ee;--gold:#c8a84a;--amber:#d4883a;
+  --berry:#8b3a3a;--ink:#1a1a1a;--mist:rgba(90,154,64,0.08);
+  --red-china:#c0392b;--jade:#1a6b5a;--tcm-gold:#c8961a;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--ink);font-family:'EB Garamond',serif;font-size:18px;line-height:1.7;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.5;}
+
+/* ── ARABIC FONT ── */
+.ar{font-family:'Amiri',serif;}
+body.lang-ar{direction:rtl;}
+body.lang-ar .fr,.fr{display:block;}
+body.lang-ar .en,.en{display:none;}
+body.lang-ar .ar-text{display:block;}
+.ar-text{display:none;}
+body.lang-en .fr{display:none;}
+body.lang-en .en{display:block;}
+body.lang-en .ar-text{display:none;}
+span.fr{display:inline;}span.en{display:none;}span.ar-text{display:none;}
+body.lang-en span.fr{display:none;}body.lang-en span.en{display:inline;}
+body.lang-ar span.fr{display:none;}body.lang-ar span.en{display:none;}body.lang-ar span.ar-text{display:inline;}
+
+/* ── LANG SWITCHER ── */
+.lang-switcher{position:fixed;top:18px;right:180px;z-index:200;display:flex;border:1px solid rgba(90,154,64,0.4);overflow:hidden;}
+body.lang-ar .lang-switcher{right:auto;left:180px;}
+.lang-btn{padding:6px 13px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;cursor:pointer;border:none;transition:all 0.25s;background:rgba(244,237,224,0.95);color:var(--bark);}
+.lang-btn.ar-btn{font-family:'Amiri',serif;font-size:13px;letter-spacing:0;}
+.lang-btn.active{background:var(--forest);color:var(--mint);}
+.lang-btn:hover:not(.active){background:rgba(90,154,64,0.15);}
+
+/* ── SEARCH BAR ── */
+.search-wrap{position:fixed;top:14px;right:360px;z-index:200;display:flex;align-items:center;}
+body.lang-ar .search-wrap{right:auto;left:360px;}
+.search-input{width:0;padding:6px 0;background:transparent;border:none;border-bottom:1px solid transparent;font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--bark);transition:all 0.4s;outline:none;}
+.search-input.open{width:200px;padding:6px 10px;border-bottom-color:rgba(90,154,64,0.5);background:rgba(244,237,224,0.95);}
+.search-btn{width:32px;height:32px;border-radius:50%;border:1px solid rgba(45,74,45,0.3);background:rgba(244,237,224,0.95);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;color:var(--bark);}
+.search-btn:hover{background:var(--bark);color:var(--mint);}
+.search-results{position:absolute;top:44px;right:0;width:320px;background:rgba(244,237,224,0.98);border:1px solid rgba(45,74,45,0.18);border-top:2px solid var(--leaf);box-shadow:0 12px 40px rgba(0,0,0,0.12);display:none;max-height:300px;overflow-y:auto;}
+body.lang-ar .search-results{right:auto;left:0;}
+.search-results.show{display:block;}
+.sr-item{padding:10px 16px;border-bottom:1px solid rgba(45,74,45,0.08);cursor:pointer;transition:background 0.2s;}
+.sr-item:hover{background:rgba(90,154,64,0.08);}
+.sr-name{font-family:'Cinzel',serif;font-size:13px;color:var(--forest);}
+.sr-cat{font-family:'Cormorant Garamond',serif;font-size:12px;color:var(--leaf);font-style:italic;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(244,237,224,0.94);backdrop-filter:blur(14px);border-bottom:1px solid rgba(90,154,64,0.18);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:11px;text-decoration:none;}
+.nav-logo-icon{width:34px;height:34px;background:var(--bark);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.nav-brand{font-family:'Cinzel',serif;font-size:14px;letter-spacing:3px;color:var(--forest);font-weight:600;line-height:1.1;}
+.nav-brand span{display:block;font-size:8px;letter-spacing:5px;color:var(--leaf);font-weight:400;margin-top:1px;}
+body.lang-ar .nav-brand{letter-spacing:0;font-family:'Amiri',serif;font-size:16px;}
+.nav-links{display:flex;gap:24px;list-style:none;}
+.nav-links a{font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--bark);text-decoration:none;transition:color 0.3s;}
+.nav-links a:hover{color:var(--leaf);}
+body.lang-ar .nav-links a{font-family:'Amiri',serif;font-size:15px;letter-spacing:0;text-transform:none;}
+.nav-social{display:flex;gap:8px;align-items:center;}
+.nav-social a{width:30px;height:30px;border-radius:50%;border:1px solid rgba(45,74,45,0.3);display:flex;align-items:center;justify-content:center;color:var(--bark);transition:all 0.3s;text-decoration:none;font-size:11px;font-family:'Cinzel',serif;font-weight:600;}
+.nav-social a:hover{background:var(--bark);color:var(--mint);}
+
+/* DROPDOWN */
+.nav-item{position:relative;}
+.nav-item>a{display:flex;align-items:center;gap:5px;}
+.nav-item>a::after{content:'▾';font-size:10px;color:var(--leaf);transition:transform 0.3s;}
+.nav-item:hover>a::after{transform:rotate(180deg);}
+.dropdown{position:absolute;top:calc(100% + 10px);left:-20px;min-width:280px;background:rgba(244,237,224,0.98);backdrop-filter:blur(16px);border:1px solid rgba(45,74,45,0.18);border-top:2px solid var(--leaf);box-shadow:0 12px 40px rgba(0,0,0,0.12);opacity:0;visibility:hidden;transform:translateY(-8px);transition:all 0.25s ease;z-index:300;}
+body.lang-ar .dropdown{left:auto;right:-20px;}
+.nav-item:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0);}
+.dropdown-section{padding:12px 0 4px;}
+.dropdown-section-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--leaf);padding:0 18px 7px;display:flex;align-items:center;gap:8px;}
+.dropdown-section-title::after{content:'';flex:1;height:1px;background:rgba(45,74,45,0.15);}
+body.lang-ar .dropdown-section-title{font-family:'Amiri',serif;font-size:12px;letter-spacing:0;text-transform:none;flex-direction:row-reverse;}
+.dropdown a{display:flex;align-items:center;gap:10px;padding:7px 18px;font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--bark);text-decoration:none;transition:all 0.2s;text-transform:none;}
+.dropdown a:hover{background:rgba(90,154,64,0.08);color:var(--forest);padding-left:24px;}
+body.lang-ar .dropdown a:hover{padding-left:18px;padding-right:24px;}
+.dropdown a .dico{width:16px;height:16px;flex-shrink:0;opacity:0.6;}
+.dropdown-divider{height:1px;background:rgba(45,74,45,0.1);margin:4px 18px;}
+
+/* ── HERO ── */
+.hero{min-height:100vh;background:var(--forest);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:80px 40px 60px;}
+.hero-bg{position:absolute;inset:0;opacity:0.06;}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:840px;}
+body.lang-ar .hero-content{direction:rtl;}
+.hero-eyebrow{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:6px;text-transform:uppercase;color:var(--sage);margin-bottom:28px;display:flex;align-items:center;justify-content:center;gap:14px;animation:fadeUp 1s ease both;}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';width:40px;height:1px;background:var(--fern);}
+body.lang-ar .hero-eyebrow{font-family:'Amiri',serif;font-size:16px;letter-spacing:0;}
+.hero-logo-circle{width:88px;height:88px;background:radial-gradient(circle at 40% 35%,#2d5a22,#152812);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 22px;border:1px solid rgba(90,154,64,0.3);box-shadow:0 0 60px rgba(90,154,64,0.15);animation:fadeUp 1s 0.1s ease both;}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(44px,7.5vw,84px);letter-spacing:12px;color:var(--parchment);font-weight:400;line-height:1;margin-bottom:6px;animation:fadeUp 1s 0.2s ease both;}
+.hero-world{font-family:'Cinzel',serif;font-size:clamp(18px,2.5vw,28px);letter-spacing:18px;color:var(--sage);font-weight:400;margin-bottom:22px;animation:fadeUp 1s 0.28s ease both;}
+.hero-arabic-title{font-family:'Amiri',serif;font-size:clamp(22px,3vw,36px);color:rgba(168,216,128,0.7);font-weight:700;margin-bottom:18px;animation:fadeUp 1s 0.32s ease both;display:none;}
+body.lang-ar .hero-arabic-title{display:block;}
+body.lang-ar .hero-title,.hero-world{display:block;}
+.hero-subtitle{font-family:'Cormorant Garamond',serif;font-size:21px;color:rgba(168,216,128,0.65);font-style:italic;font-weight:300;margin-bottom:36px;animation:fadeUp 1s 0.35s ease both;}
+body.lang-ar .hero-subtitle{font-family:'Amiri',serif;font-size:20px;font-style:normal;}
+.hero-divider{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:36px;animation:fadeUp 1s 0.4s ease both;}
+.hdl{width:80px;height:1px;background:linear-gradient(to right,transparent,var(--fern));}
+.hdl:last-child{background:linear-gradient(to left,transparent,var(--fern));}
+.hdo{color:var(--gold);font-size:16px;}
+.hero-desc{font-size:17px;color:rgba(244,237,224,0.62);max-width:580px;margin:0 auto 46px;line-height:1.9;animation:fadeUp 1s 0.5s ease both;}
+body.lang-ar .hero-desc{font-family:'Amiri',serif;font-size:18px;}
+.hero-cta{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;animation:fadeUp 1s 0.6s ease both;}
+.btn-p{padding:13px 34px;background:var(--leaf);color:var(--cream);font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.3s;text-decoration:none;display:inline-block;}
+.btn-p:hover{background:var(--sage);transform:translateY(-2px);box-shadow:0 8px 28px rgba(90,154,64,0.3);}
+.btn-o{padding:12px 34px;background:transparent;color:var(--mint);font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;border:1px solid rgba(90,154,64,0.5);cursor:pointer;transition:all 0.3s;text-decoration:none;display:inline-block;}
+.btn-o:hover{border-color:var(--sage);background:rgba(90,154,64,0.1);transform:translateY(-2px);}
+body.lang-ar .btn-p,.btn-o{font-family:'Amiri',serif;font-size:15px;letter-spacing:0;}
+
+/* STATS */
+.stats-band{background:var(--bark);border-top:1px solid rgba(90,154,64,0.15);border-bottom:1px solid rgba(90,154,64,0.15);padding:26px 40px;display:flex;justify-content:center;gap:64px;flex-wrap:wrap;}
+.stat-item{text-align:center;}
+.stat-n{font-family:'Cinzel',serif;font-size:28px;color:var(--sage);display:block;line-height:1;margin-bottom:4px;}
+.stat-l{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(168,216,128,0.5);}
+body.lang-ar .stat-l{font-family:'Amiri',serif;font-size:14px;letter-spacing:0;text-transform:none;}
+
+/* SECTION HELPERS */
+.section{padding:80px 40px;max-width:1200px;margin:0 auto;}
+.section-header{text-align:center;margin-bottom:56px;}
+.eyebrow{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:5px;text-transform:uppercase;color:var(--leaf);margin-bottom:14px;}
+body.lang-ar .eyebrow{font-family:'Amiri',serif;font-size:15px;letter-spacing:0;text-transform:none;}
+.sec-title{font-family:'Cinzel',serif;font-size:clamp(24px,3.5vw,40px);color:var(--forest);font-weight:400;letter-spacing:2px;margin-bottom:14px;}
+body.lang-ar .sec-title{font-family:'Amiri',serif;font-size:clamp(26px,3.5vw,42px);letter-spacing:0;font-weight:700;}
+.sec-sub{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--fern);font-style:italic;max-width:500px;margin:0 auto;}
+body.lang-ar .sec-sub{font-family:'Amiri',serif;font-size:18px;font-style:normal;}
+
+/* ── MINCEUR & LONGÉVITÉ SECTION ── */
+.wellness-section{background:linear-gradient(135deg,#f8f4e8 0%,#eef4e8 100%);padding:80px 40px;border-top:1px solid rgba(45,74,45,0.1);}
+.wellness-inner{max-width:1200px;margin:0 auto;}
+.wellness-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:rgba(45,74,45,0.12);border:1px solid rgba(45,74,45,0.12);margin-top:56px;}
+.wellness-panel{background:white;padding:48px 40px;}
+.wellness-panel.dark{background:var(--forest);color:white;}
+.wp-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:20px;border:1px solid rgba(90,154,64,0.3);}
+.wp-icon.slim{background:rgba(90,154,64,0.1);}
+.wp-icon.long{background:rgba(200,168,74,0.1);}
+.wp-icon.dark-ico{background:rgba(90,154,64,0.15);}
+.wp-tag{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--leaf);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.wp-tag::before{content:'';width:20px;height:1px;background:currentColor;}
+.wellness-panel.dark .wp-tag{color:var(--sage);}
+.wp-title{font-family:'Cinzel',serif;font-size:26px;color:var(--forest);font-weight:400;letter-spacing:1px;margin-bottom:16px;line-height:1.3;}
+.wellness-panel.dark .wp-title{color:var(--parchment);}
+body.lang-ar .wp-title{font-family:'Amiri',serif;letter-spacing:0;font-weight:700;}
+.wp-text{font-family:'EB Garamond',serif;font-size:16px;color:#444;line-height:1.8;margin-bottom:20px;}
+.wellness-panel.dark .wp-text{color:rgba(244,237,224,0.7);}
+body.lang-ar .wp-text{font-family:'Amiri',serif;font-size:17px;}
+.wp-plants{display:flex;flex-direction:column;gap:10px;}
+.wp-plant{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid rgba(45,74,45,0.12);background:var(--cream);}
+.wellness-panel.dark .wp-plant{background:rgba(45,74,45,0.3);border-color:rgba(90,154,64,0.2);}
+.wp-plant-name{font-family:'Cinzel',serif;font-size:13px;color:var(--forest);letter-spacing:1px;}
+.wellness-panel.dark .wp-plant-name{color:var(--mint);}
+.wp-plant-effect{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--leaf);font-style:italic;}
+.wellness-panel.dark .wp-plant-effect{color:rgba(168,216,128,0.6);}
+.wp-source{font-family:'Cormorant Garamond',serif;font-size:12px;color:#999;font-style:italic;margin-top:16px;padding-top:12px;border-top:1px solid rgba(0,0,0,0.07);}
+.wellness-panel.dark .wp-source{color:rgba(168,216,128,0.3);border-top-color:rgba(90,154,64,0.15);}
+
+/* ── MTC SECTION ── */
+.tcm-section{background:linear-gradient(160deg,#1a0808 0%,#0d1a0d 40%,#0a0d1a 100%);padding:90px 40px;position:relative;overflow:hidden;}
+.tcm-section::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,transparent,var(--red-china),var(--tcm-gold),var(--red-china),transparent);}
+.tcm-inner{max-width:1200px;margin:0 auto;}
+.tcm-header{text-align:center;margin-bottom:60px;}
+.tcm-eyebrow{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:6px;text-transform:uppercase;color:var(--tcm-gold);margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:14px;}
+.tcm-eyebrow::before,.tcm-eyebrow::after{content:'';width:40px;height:1px;background:var(--tcm-gold);opacity:0.4;}
+.tcm-title{font-family:'Cinzel',serif;font-size:clamp(26px,4vw,44px);color:var(--parchment);font-weight:400;letter-spacing:3px;margin-bottom:8px;}
+.tcm-chinese{font-size:clamp(28px,4.5vw,48px);color:var(--red-china);letter-spacing:8px;margin-bottom:8px;font-weight:400;font-family:'Noto Serif SC',serif;}
+.tcm-subtitle{font-family:'Cormorant Garamond',serif;font-size:18px;color:rgba(200,150,26,0.6);font-style:italic;}
+body.lang-ar .tcm-title{font-family:'Amiri',serif;letter-spacing:0;font-weight:700;}
+body.lang-ar .tcm-subtitle{font-family:'Amiri',serif;font-style:normal;}
+
+/* 5 Elements */
+.five-elements{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:56px;}
+.element-card{width:180px;padding:24px 16px;text-align:center;border:1px solid rgba(255,255,255,0.08);position:relative;transition:transform 0.3s;}
+.element-card:hover{transform:translateY(-4px);}
+.el-symbol{font-size:32px;margin-bottom:10px;display:block;}
+.el-cn{font-size:22px;color:var(--tcm-gold);margin-bottom:6px;display:block;font-family:'serif';}
+.el-name{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;margin-bottom:8px;font-weight:400;}
+.el-organ{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;margin-bottom:8px;}
+.el-plant{font-family:'EB Garamond',serif;font-size:13px;line-height:1.5;}
+.el-wood{background:rgba(20,80,30,0.3);border-color:rgba(40,150,50,0.3);color:#a8d880;}
+.el-fire{background:rgba(80,15,15,0.3);border-color:rgba(160,30,30,0.3);color:#e8a0a0;}
+.el-earth{background:rgba(80,60,10,0.3);border-color:rgba(160,120,20,0.3);color:#e8d090;}
+.el-metal{background:rgba(40,50,60,0.3);border-color:rgba(80,100,120,0.3);color:#b0c8d8;}
+.el-water{background:rgba(10,20,60,0.3);border-color:rgba(20,40,120,0.3);color:#90b0e8;}
+
+/* TCM plants grid */
+.tcm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.05);margin-bottom:48px;}
+.tcm-card{background:rgba(10,15,10,0.8);padding:32px 24px;transition:background 0.3s;cursor:pointer;position:relative;}
+.tcm-card:hover{background:rgba(20,30,20,0.9);}
+.tcm-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--red-china);transform:scaleX(0);transition:transform 0.3s;}
+.tcm-card:hover::after{transform:scaleX(1);}
+.tcm-cn-name{font-size:28px;color:var(--red-china);margin-bottom:6px;font-family:'serif';}
+.tcm-name{font-family:'Cinzel',serif;font-size:16px;color:var(--parchment);font-weight:400;letter-spacing:1px;margin-bottom:4px;}
+.tcm-latin{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(200,150,26,0.6);font-style:italic;margin-bottom:14px;}
+.tcm-element-badge{display:inline-block;padding:2px 10px;font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:2px;border:1px solid rgba(200,150,26,0.3);color:var(--tcm-gold);margin-bottom:12px;}
+.tcm-desc{font-family:'EB Garamond',serif;font-size:14px;color:rgba(244,237,224,0.6);line-height:1.7;margin-bottom:14px;}
+.tcm-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.tcm-tag{padding:2px 8px;font-family:'Cormorant Garamond',serif;font-size:11px;border:1px solid rgba(200,150,26,0.2);color:rgba(200,150,26,0.7);}
+
+/* ── VÉTÉRINAIRE ── */
+.vet-section{background:var(--parchment);padding:80px 40px;border-top:1px solid rgba(45,74,45,0.1);}
+.vet-inner{max-width:1200px;margin:0 auto;}
+.vet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(45,74,45,0.12);border:1px solid rgba(45,74,45,0.12);margin-top:56px;}
+.vet-card{background:white;padding:30px 22px;transition:background 0.3s;}
+.vet-card:hover{background:var(--cream);}
+.vet-animal{font-size:32px;margin-bottom:12px;display:block;}
+.vet-animal-name{font-family:'Cinzel',serif;font-size:14px;letter-spacing:2px;color:var(--forest);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid rgba(45,74,45,0.1);}
+body.lang-ar .vet-animal-name{font-family:'Amiri',serif;letter-spacing:0;}
+.vet-plant-item{display:flex;flex-direction:column;gap:2px;margin-bottom:10px;}
+.vet-plant-name{font-family:'Cinzel',serif;font-size:11px;color:var(--fern);letter-spacing:1px;}
+.vet-plant-use{font-family:'EB Garamond',serif;font-size:13px;color:#555;line-height:1.5;}
+.vet-warning{display:flex;gap:6px;padding:8px 10px;background:rgba(139,58,58,0.08);border-left:2px solid var(--berry);margin-top:14px;font-family:'Cormorant Garamond',serif;font-size:12px;color:#5a2020;line-height:1.5;}
+
+/* ── PROJETS MONDE ── */
+
+/* ── MARINE SECTION ── */
+.marine-section{background:linear-gradient(160deg,#020d12 0%,#041a22 40%,#051525 100%);padding:90px 40px;position:relative;overflow:hidden;}
+.marine-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 30%,rgba(26,107,138,0.18) 0%,transparent 60%);}
+.marine-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1;}
+.marine-eyebrow{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:6px;text-transform:uppercase;color:rgba(100,200,220,0.6);margin-bottom:16px;text-align:center;display:flex;align-items:center;justify-content:center;gap:14px;}
+.marine-eyebrow::before,.marine-eyebrow::after{content:'';width:40px;height:1px;background:rgba(100,200,220,0.3);}
+.marine-title{font-family:'Cinzel',serif;font-size:clamp(24px,4vw,40px);color:#e0f4f8;font-weight:400;letter-spacing:3px;text-align:center;margin-bottom:8px;}
+body.lang-ar .marine-title{font-family:'Amiri',serif;letter-spacing:0;font-weight:700;}
+.marine-subtitle{font-family:'Cormorant Garamond',serif;font-size:18px;color:rgba(100,200,220,0.45);font-style:italic;text-align:center;margin-bottom:52px;}
+body.lang-ar .marine-subtitle{font-family:'Amiri',serif;font-style:normal;}
+.marine-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(100,200,220,0.08);border:1px solid rgba(100,200,220,0.08);margin-bottom:40px;}
+.marine-card{background:rgba(4,26,34,0.85);padding:28px 22px;transition:background 0.3s;cursor:default;position:relative;overflow:hidden;}
+.marine-card:hover{background:rgba(8,38,50,0.95);}
+.marine-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,#1a6b8a,transparent);transform:scaleX(0);transition:transform 0.4s;}
+.marine-card:hover::after{transform:scaleX(1);}
+.marine-icon{font-size:26px;margin-bottom:10px;display:block;}
+.marine-name{font-family:'Cinzel',serif;font-size:15px;color:#b0e8f0;font-weight:400;letter-spacing:1px;margin-bottom:3px;}
+.marine-latin{font-family:'Cormorant Garamond',serif;font-size:12px;color:rgba(100,200,220,0.45);font-style:italic;margin-bottom:12px;}
+.marine-desc{font-family:'EB Garamond',serif;font-size:14px;color:rgba(200,240,248,0.55);line-height:1.7;margin-bottom:12px;}
+.marine-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.marine-tag{padding:2px 8px;font-family:'Cormorant Garamond',serif;font-size:11px;border:1px solid rgba(26,107,138,0.35);color:rgba(100,200,220,0.6);}
+.marine-warn{margin-top:10px;padding:6px 9px;border-left:2px solid rgba(100,200,220,0.3);font-family:'Cormorant Garamond',serif;font-size:12px;color:rgba(100,200,220,0.4);line-height:1.5;}
+.marine-note{max-width:900px;margin:0 auto;text-align:center;padding:18px 24px;border:1px solid rgba(26,107,138,0.2);background:rgba(26,107,138,0.06);}
+.marine-note p{font-family:'Cormorant Garamond',serif;font-size:16px;color:rgba(100,200,220,0.5);font-style:italic;line-height:1.7;}
+
+/* ── FÉMININ SECTION ── */
+.feminin-section{background:linear-gradient(150deg,#180a12 0%,#1f0d16 50%,#160a14 100%);padding:90px 40px;position:relative;overflow:hidden;}
+.feminin-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 60%,rgba(154,58,106,0.15) 0%,transparent 55%);}
+.feminin-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1;}
+.feminin-eyebrow{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:6px;text-transform:uppercase;color:rgba(220,140,180,0.6);margin-bottom:16px;text-align:center;display:flex;align-items:center;justify-content:center;gap:14px;}
+.feminin-eyebrow::before,.feminin-eyebrow::after{content:'';width:40px;height:1px;background:rgba(220,140,180,0.3);}
+.feminin-title{font-family:'Cinzel',serif;font-size:clamp(24px,4vw,40px);color:#f0d8e8;font-weight:400;letter-spacing:3px;text-align:center;margin-bottom:8px;}
+body.lang-ar .feminin-title{font-family:'Amiri',serif;letter-spacing:0;font-weight:700;}
+.feminin-subtitle{font-family:'Cormorant Garamond',serif;font-size:18px;color:rgba(220,140,180,0.45);font-style:italic;text-align:center;margin-bottom:52px;}
+body.lang-ar .feminin-subtitle{font-family:'Amiri',serif;font-style:normal;}
+.feminin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:40px;}
+.feminin-block{background:rgba(24,10,18,0.8);border:1px solid rgba(154,58,106,0.2);padding:28px 24px;}
+.fb-phase{font-family:'Cinzel',serif;font-size:9px;letter-spacing:4px;color:rgba(220,140,180,0.5);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.fb-phase::after{content:'';flex:1;height:1px;background:rgba(154,58,106,0.2);}
+.fb-title{font-family:'Cinzel',serif;font-size:17px;color:#f0d8e8;font-weight:400;letter-spacing:1px;margin-bottom:6px;}
+body.lang-ar .fb-title{font-family:'Amiri',serif;letter-spacing:0;font-weight:700;}
+.fb-desc{font-family:'Cormorant Garamond',serif;font-size:16px;color:rgba(240,216,232,0.5);font-style:italic;margin-bottom:18px;line-height:1.6;}
+body.lang-ar .fb-desc{font-family:'Amiri',serif;font-style:normal;}
+.feminin-plant{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(154,58,106,0.1);align-items:flex-start;}
+.feminin-plant:last-child{border-bottom:none;padding-bottom:0;}
+.fp-name{font-family:'Cinzel',serif;font-size:12px;color:rgba(220,140,180,0.8);letter-spacing:1px;min-width:100px;flex-shrink:0;margin-top:1px;}
+.fp-use{font-family:'EB Garamond',serif;font-size:14px;color:rgba(240,216,232,0.5);line-height:1.6;}
+.fp-use .fr,.fp-use .en,.fp-use .ar-text{display:inline;}
+.feminin-warning{margin-top:14px;padding:8px 12px;border-left:2px solid rgba(154,58,106,0.4);font-family:'Cormorant Garamond',serif;font-size:12px;color:rgba(220,140,180,0.45);line-height:1.6;}
+.feminin-banner{background:rgba(154,58,106,0.08);border:1px solid rgba(154,58,106,0.18);padding:18px 28px;text-align:center;max-width:900px;margin:0 auto;}
+.feminin-banner p{font-family:'Cormorant Garamond',serif;font-size:16px;color:rgba(220,140,180,0.55);font-style:italic;line-height:1.7;}
+
+.world-section{background:var(--forest);padding:90px 40px;position:relative;overflow:hidden;}
+.world-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(61,107,53,0.15) 0%,transparent 60%);}
+.world-inner{max-width:1200px;margin:0 auto;position:relative;}
+.world-eyebrow{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:6px;text-transform:uppercase;color:var(--sage);text-align:center;margin-bottom:14px;}
+body.lang-ar .world-eyebrow{font-family:'Amiri',serif;font-size:15px;letter-spacing:0;text-transform:none;}
+.world-title{font-family:'Cinzel',serif;font-size:clamp(26px,4vw,42px);color:var(--parchment);font-weight:400;text-align:center;letter-spacing:3px;margin-bottom:12px;}
+body.lang-ar .world-title{font-family:'Amiri',serif;letter-spacing:0;font-weight:700;}
+.world-subtitle{font-family:'Cormorant Garamond',serif;font-size:18px;color:rgba(168,216,128,0.55);font-style:italic;text-align:center;margin-bottom:60px;}
+.world-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(90,154,64,0.12);border:1px solid rgba(90,154,64,0.12);}
+.world-card{background:rgba(15,25,15,0.8);padding:36px 28px;transition:background 0.3s;cursor:pointer;}
+.world-card:hover{background:rgba(25,40,25,0.9);}
+.wc-flag{font-size:28px;margin-bottom:12px;display:block;}
+.wc-country{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:var(--gold);margin-bottom:8px;}
+body.lang-ar .wc-country{font-family:'Amiri',serif;letter-spacing:0;}
+.wc-plant{font-family:'Cinzel',serif;font-size:18px;color:var(--parchment);font-weight:400;margin-bottom:8px;letter-spacing:1px;}
+body.lang-ar .wc-plant{font-family:'Amiri',serif;letter-spacing:0;font-weight:700;}
+.wc-desc{font-family:'EB Garamond',serif;font-size:14px;color:rgba(244,237,224,0.6);line-height:1.7;margin-bottom:14px;}
+body.lang-ar .wc-desc{font-family:'Amiri',serif;font-size:15px;}
+.wc-stats{display:flex;gap:12px;flex-wrap:wrap;}
+.wc-stat{padding:4px 10px;border:1px solid rgba(90,154,64,0.2);font-family:'Cormorant Garamond',serif;font-size:12px;color:rgba(168,216,128,0.6);}
+
+/* ── JOURNAL ── */
+.journal-section{background:var(--parchment);border-top:2px solid rgba(45,74,45,0.15);padding:80px 40px;position:relative;}
+.journal-section::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,transparent,var(--gold),transparent);}
+.journal-inner{max-width:1200px;margin:0 auto;}
+.journal-the{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:6px;text-transform:uppercase;color:var(--amber);margin-bottom:4px;text-align:center;}
+.journal-name{font-family:'Cinzel',serif;font-size:clamp(24px,4vw,42px);color:var(--forest);font-weight:400;letter-spacing:4px;text-align:center;margin-bottom:6px;}
+.journal-subtitle{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--fern);font-style:italic;text-align:center;margin-bottom:14px;}
+body.lang-ar .journal-name{font-family:'Amiri',serif;letter-spacing:0;font-weight:700;}
+.journal-divider{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:48px;}
+.jdl{flex:0 0 70px;height:1px;background:linear-gradient(to right,transparent,var(--gold));}
+.jdl:last-child{background:linear-gradient(to left,transparent,var(--gold));}
+.jdo{color:var(--gold);}
+.journal-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(45,74,45,0.12);border:1px solid rgba(45,74,45,0.15);margin-bottom:40px;}
+.journal-card{background:var(--cream);padding:32px 26px;transition:background 0.3s;cursor:pointer;}
+.journal-card:hover{background:white;}
+.journal-card.featured-article{grid-column:span 2;background:white;}
+.jcard-category{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.jcard-category::before{content:'';width:16px;height:1px;background:currentColor;}
+body.lang-ar .jcard-category{font-family:'Amiri',serif;font-size:13px;letter-spacing:0;text-transform:none;flex-direction:row-reverse;}
+body.lang-ar .jcard-category::before{display:none;}
+body.lang-ar .jcard-category::after{content:'';width:16px;height:1px;background:currentColor;}
+.cat-research{color:#4a7a9a;}.cat-discovery{color:#7a4a9a;}.cat-clinical{color:#4a9a6a;}.cat-traditional{color:var(--amber);}.cat-slim{color:#6a9a3a;}.cat-longevity{color:var(--gold);}.cat-vet{color:#7a5a3a;}.cat-tcm{color:var(--red-china);}.cat-marine{color:#1a8aaa;}.cat-feminin{color:#9a3a6a;}.cat-marine{color:#1a6b8a;}.cat-feminin{color:#9a3a6a;}
+.jcard-title{font-family:'Cinzel',serif;font-size:16px;color:var(--forest);font-weight:400;line-height:1.4;margin-bottom:10px;letter-spacing:0.5px;}
+.journal-card.featured-article .jcard-title{font-size:22px;}
+body.lang-ar .jcard-title{font-family:'Amiri',serif;font-size:18px;letter-spacing:0;font-weight:700;}
+.jcard-excerpt{font-family:'EB Garamond',serif;font-size:14px;color:#555;line-height:1.7;margin-bottom:14px;}
+body.lang-ar .jcard-excerpt{font-family:'Amiri',serif;font-size:16px;}
+.jcard-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.jcard-date{font-family:'Cormorant Garamond',serif;font-size:12px;color:#999;font-style:italic;}
+.jcard-source{font-family:'Cormorant Garamond',serif;font-size:12px;color:var(--leaf);font-style:italic;}
+
+/* ── ABOUT ── */
+.about-section{background:var(--forest);padding:80px 40px;position:relative;overflow:hidden;}
+.about-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;}
+body.lang-ar .about-inner{direction:rtl;}
+.about-eyebrow{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:5px;text-transform:uppercase;color:var(--sage);margin-bottom:14px;}
+body.lang-ar .about-eyebrow{font-family:'Amiri',serif;font-size:15px;letter-spacing:0;text-transform:none;}
+.about-title{font-family:'Cinzel',serif;font-size:clamp(22px,3vw,36px);color:var(--parchment);font-weight:400;letter-spacing:2px;margin-bottom:22px;line-height:1.3;}
+body.lang-ar .about-title{font-family:'Amiri',serif;letter-spacing:0;font-weight:700;}
+.about-txt{font-size:15px;color:rgba(244,237,224,0.66);line-height:1.9;margin-bottom:16px;}
+body.lang-ar .about-txt{font-family:'Amiri',serif;font-size:17px;}
+.src-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.src-card{padding:14px;border:1px solid rgba(90,154,64,0.2);background:rgba(45,74,45,0.3);}
+.src-name{font-family:'Cinzel',serif;font-size:10px;color:var(--mint);margin-bottom:4px;letter-spacing:1px;}
+.src-desc{font-family:'Cormorant Garamond',serif;font-size:12px;color:rgba(168,216,128,0.5);font-style:italic;line-height:1.5;}
+body.lang-ar .src-name,.src-desc{font-family:'Amiri',serif;letter-spacing:0;font-style:normal;}
+
+/* ── NEWSLETTER ── */
+.nl-section{padding:64px 40px;background:white;border-top:1px solid rgba(45,74,45,0.1);text-align:center;}
+.nl-inner{max-width:520px;margin:0 auto;}
+body.lang-ar .nl-inner{direction:rtl;}
+.nl-title{font-family:'Cinzel',serif;font-size:22px;color:var(--forest);font-weight:400;letter-spacing:2px;margin-bottom:7px;}
+body.lang-ar .nl-title{font-family:'Amiri',serif;letter-spacing:0;font-weight:700;}
+.nl-sub{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--fern);font-style:italic;margin-bottom:28px;}
+body.lang-ar .nl-sub{font-family:'Amiri',serif;font-style:normal;}
+.nl-form{display:flex;max-width:420px;margin:0 auto 12px;}
+.nl-input{flex:1;padding:12px 16px;border:1px solid rgba(45,74,45,0.3);border-right:none;background:var(--cream);font-family:'EB Garamond',serif;font-size:16px;color:var(--ink);outline:none;}
+body.lang-ar .nl-input{border-right:1px solid rgba(45,74,45,0.3);border-left:none;}
+.nl-input:focus{border-color:var(--leaf);}
+.nl-btn{padding:12px 20px;background:var(--forest);color:var(--mint);font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;border:1px solid var(--forest);cursor:pointer;transition:background 0.3s;white-space:nowrap;}
+body.lang-ar .nl-btn{font-family:'Amiri',serif;font-size:14px;letter-spacing:0;}
+.nl-note{font-family:'Cormorant Garamond',serif;font-size:12px;color:#aaa;font-style:italic;}
+
+/* ── SOCIAL ── */
+.social-section{padding:48px 40px;text-align:center;background:var(--parchment);}
+.social-title{font-family:'Cinzel',serif;font-size:12px;letter-spacing:4px;color:var(--forest);margin-bottom:24px;}
+body.lang-ar .social-title{font-family:'Amiri',serif;letter-spacing:0;}
+.social-links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.social-link{display:flex;align-items:center;gap:9px;padding:11px 22px;border:1px solid rgba(45,74,45,0.2);text-decoration:none;font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--forest);transition:all 0.3s;background:white;}
+.social-link:hover{background:var(--forest);color:var(--mint);}
+
+/* ── FOOTER ── */
+footer{background:var(--deep);padding:52px 40px 26px;}
+.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:40px;}
+body.lang-ar .footer-inner{direction:rtl;}
+.fbrand{font-family:'Cinzel',serif;font-size:16px;letter-spacing:4px;color:var(--mint);margin-bottom:3px;}
+.fbrand-world{font-family:'Cinzel',serif;font-size:9px;letter-spacing:6px;color:var(--sage);margin-bottom:10px;}
+.ftagline{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(168,216,128,0.42);font-style:italic;margin-bottom:12px;}
+.fdisclaimer{font-family:'Cormorant Garamond',serif;font-size:12px;color:rgba(168,216,128,0.26);line-height:1.7;}
+body.lang-ar .ftagline,.fdisclaimer{font-family:'Amiri',serif;font-style:normal;}
+.fcol-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:var(--sage);margin-bottom:14px;}
+body.lang-ar .fcol-title{font-family:'Amiri',serif;letter-spacing:0;font-size:13px;}
+.flinks{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.flinks a{font-family:'Cormorant Garamond',serif;font-size:14px;color:rgba(168,216,128,0.42);text-decoration:none;transition:color 0.2s;}
+.flinks a:hover{color:var(--sage);}
+body.lang-ar .flinks a{font-family:'Amiri',serif;font-size:15px;}
+.footer-bottom{max-width:1200px;margin:0 auto;padding-top:22px;border-top:1px solid rgba(90,154,64,0.1);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.fcopy{font-family:'Cormorant Garamond',serif;font-size:12px;color:rgba(168,216,128,0.26);}
+.flegal{display:flex;gap:18px;}
+.flegal a{font-family:'Cormorant Garamond',serif;font-size:12px;color:rgba(168,216,128,0.26);text-decoration:none;}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* MOBILE */
+@media(max-width:960px){
+  nav{padding:0 16px;}.nav-links{display:none;}.lang-switcher{right:56px;}.search-wrap{display:none;}
+  body.lang-ar .lang-switcher{left:56px;right:auto;}
+  .hero{padding:100px 20px 56px;}.wellness-grid,.about-inner{grid-template-columns:1fr;}
+  .tcm-grid,.vet-grid,.world-grid,.journal-grid,.marine-grid,.feminin-grid{grid-template-columns:1fr;}
+  .journal-card.featured-article{grid-column:span 1;}
+  .footer-inner{grid-template-columns:1fr 1fr;gap:32px;}
+  .five-elements{gap:12px;}.element-card{width:140px;}
+  .section{padding:56px 20px;}.journal-section,.world-section,.tcm-section,.wellness-section,.vet-section{padding:56px 20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <input type="text" class="search-input" id="searchInput" placeholder="Rechercher une plante…" oninput="doSearch(this.value)" onblur="closeSearch()">
+  <button class="search-btn" onclick="toggleSearch()" aria-label="Recherche">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+  </button>
+  <div class="search-results" id="searchResults"></div>
+</div>
+
+<!-- LANG -->
+<div class="lang-switcher">
+  <button class="lang-btn active" onclick="setLang('fr')">FR</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+  <button class="lang-btn ar-btn" onclick="setLang('ar')">عربي</button>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">
+      <svg width="20" height="20" viewBox="0 0 52 52" fill="none">
+        <line x1="26" y1="48" x2="26" y2="12" stroke="#7aba60" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M26 36 C18 30,10 28,10 20 C14 20,20 22,26 30" fill="#5a9a40"/>
+        <path d="M26 36 C34 30,42 28,42 20 C38 20,32 22,26 30" fill="#4a8a32"/>
+        <path d="M26 24 C20 18,14 18,14 12 C18 11,23 14,26 20" fill="#6aaa50"/>
+        <path d="M26 24 C32 18,38 18,38 12 C34 11,29 14,26 20" fill="#5a9a42"/>
+        <circle cx="26" cy="10" r="2.4" fill="#c8e880"/>
+        <circle cx="14" cy="32" r="1.8" fill="#c85a50"/>
+        <circle cx="38" cy="32" r="1.8" fill="#c85a50"/>
+      </svg>
+    </div>
+    <div class="nav-brand">HERBALIST<span>WORLD</span></div>
+  </a>
+
+  <ul class="nav-links">
+    <li class="nav-item">
+      <a href="#plantes"><span class="fr">Plantes</span><span class="en">Plants</span><span class="ar-text">النباتات</span></a>
+      <div class="dropdown">
+        <div class="dropdown-section">
+          <div class="dropdown-section-title"><span class="fr">Par usage</span><span class="en">By use</span><span class="ar-text">حسب الاستخدام</span></div>
+          <a href="#wellness"><svg class="dico" viewBox="0 0 24 24" fill="none" stroke="#5a9a40" stroke-width="1.5"><path d="M12 2C8 6 6 9 6 13a6 6 0 0 0 12 0c0-4-2-7-6-11z"/></svg><span class="fr">Minceur & Métabolisme</span><span class="en">Slimming & Metabolism</span><span class="ar-text">التخسيس والتمثيل الغذائي</span></a>
+          <a href="#wellness"><svg class="dico" viewBox="0 0 24 24" fill="none" stroke="#c8a84a" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="fr">Longévité & Vitalité</span><span class="en">Longevity & Vitality</span><span class="ar-text">طول العمر والحيوية</span></a>
+          <a href="#plantes"><svg class="dico" viewBox="0 0 24 24" fill="none" stroke="#5a9a40" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="fr">Sommeil & Relaxation</span><span class="en">Sleep & Relaxation</span><span class="ar-text">النوم والاسترخاء</span></a>
+          <a href="#plantes"><svg class="dico" viewBox="0 0 24 24" fill="none" stroke="#5a9a40" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="fr">Immunité & Infections</span><span class="en">Immunity</span><span class="ar-text">المناعة والعدوى</span></a>
+        </div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-section">
+          <div class="dropdown-section-title"><span class="fr">Médecines du monde</span><span class="en">World medicines</span><span class="ar-text">طب العالم</span></div>
+          <a href="#tcm"><svg class="dico" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span class="fr">Médecine Traditionnelle Chinoise</span><span class="en">Traditional Chinese Medicine</span><span class="ar-text">الطب الصيني التقليدي</span></a>
+          <a href="#vet"><svg class="dico" viewBox="0 0 24 24" fill="none" stroke="#7a5a3a" stroke-width="1.5"><path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.96-1.45 2.344-2.5"/><path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.96-1.45-2.344-2.5"/><path d="M8 14v.5A3.5 3.5 0 0 0 11.5 18h1a3.5 3.5 0 0 0 3.5-3.5V14"/><path d="M6.5 9.5 C6.5 15, 17.5 15, 17.5 9.5"/></svg><span class="fr">Phytothérapie Vétérinaire</span><span class="en">Veterinary Phytotherapy</span><span class="ar-text">العلاج النباتي البيطري</span></a>
+          <a href="#world"><svg class="dico" viewBox="0 0 24 24" fill="none" stroke="#c8a84a" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span class="fr">Projets & Culture mondiale</span><span class="en">World Projects</span><span class="ar-text">مشاريع وثقافة عالمية</span></a>
+        </div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-section">
+          <div class="dropdown-section-title"><span class="fr">Précautions</span><span class="en">Cautions</span><span class="ar-text">تحذيرات</span></div>
+          <a href="#"><svg class="dico" viewBox="0 0 24 24" fill="none" stroke="#8b3a3a" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span class="fr">Interactions médicamenteuses</span><span class="en">Drug interactions</span><span class="ar-text">التفاعلات الدوائية</span></a>
+          <a href="#"><svg class="dico" viewBox="0 0 24 24" fill="none" stroke="#8b3a3a" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M12 14c-5 0-8 2-8 4v1h16v-1c0-2-3-4-8-4z"/></svg><span class="fr">Plantes & Enfants</span><span class="en">Plants & Children</span><span class="ar-text">النباتات والأطفال</span></a>
+        </div>
+      </div>
+    </li>
+    <li><a href="#tcm"><span class="fr">MTC</span><span class="en">TCM</span><span class="ar-text">الطب الصيني</span></a></li>
+    <li><a href="#journal"><span class="fr">Journal</span><span class="en">Journal</span><span class="ar-text">المجلة</span></a></li>
+    <li><a href="#world"><span class="fr">Monde</span><span class="en">World</span><span class="ar-text">العالم</span></a></li>
+    <li><a href="#marine"><span class="fr">Marin</span><span class="en">Marine</span><span class="ar-text">بحري</span></a></li>
+    <li><a href="#feminin"><span class="fr">Féminin</span><span class="en">Feminine</span><span class="ar-text">صحة المرأة</span></a></li>
+    <li><a href="#about"><span class="fr">À propos</span><span class="en">About</span><span class="ar-text">حول</span></a></li>
+  </ul>
+
+  <div class="nav-social">
+    <a href="#" title="Facebook">f</a>
+    <a href="#" title="Instagram">ig</a>
+    <a href="#" title="Pinterest">P</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <svg class="hero-bg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <g stroke="#5a9a40" fill="none" stroke-width="0.7">
+      <line x1="80" y1="800" x2="80" y2="280"/><path d="M80 580 C44 545,8 545,8 508 C30 508,60 522,80 552"/><path d="M80 580 C116 545,152 545,152 508 C130 508,100 522,80 552"/><path d="M80 450 C48 418,18 418,18 385 C38 385,64 398,80 428"/><path d="M80 450 C112 418,142 418,142 385 C122 385,96 398,80 428"/><circle cx="80" cy="275" r="5" fill="#5a9a40" opacity="0.4"/>
+      <line x1="1120" y1="800" x2="1120" y2="180"/><path d="M1120 560 C1074 526,1034 526,1034 488 C1056 488,1088 502,1120 532"/><path d="M1120 560 C1166 526,1192 526,1192 488 C1170 488,1152 502,1120 532"/><path d="M1120 420 C1078 388,1042 388,1042 352 C1062 352,1092 366,1120 396"/><path d="M1120 420 C1162 388,1196 388,1196 352 C1176 352,1148 366,1120 396"/><circle cx="1120" cy="175" r="4.5" fill="#5a9a40" opacity="0.4"/>
+      <circle cx="600" cy="400" r="300" stroke-width="0.35" opacity="0.2"/><circle cx="600" cy="400" r="240" stroke-width="0.25" opacity="0.15"/>
+    </g>
+  </svg>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="fr">Encyclopédie · Botanique · Médecine Naturelle</span>
+      <span class="en">Encyclopedia · Botany · Natural Medicine</span>
+      <span class="ar-text ar">موسوعة · علم النبات · الطب الطبيعي</span>
+    </div>
+    <div class="hero-logo-circle">
+      <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+        <line x1="26" y1="48" x2="26" y2="12" stroke="#8aca68" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M26 36 C18 30,10 28,10 20 C14 20,20 22,26 30" fill="#5a9a40"/>
+        <path d="M26 36 C34 30,42 28,42 20 C38 20,32 22,26 30" fill="#4a8a32"/>
+        <path d="M26 24 C20 18,14 18,14 12 C18 11,23 14,26 20" fill="#6aaa50"/>
+        <path d="M26 24 C32 18,38 18,38 12 C34 11,29 14,26 20" fill="#5a9a42"/>
+        <circle cx="26" cy="10" r="2.8" fill="#c8e880"/><circle cx="26" cy="10" r="1.3" fill="#e8f8a0"/>
+        <circle cx="14" cy="32" r="2.1" fill="#c85a50"/><circle cx="38" cy="32" r="2.1" fill="#c85a50"/>
+      </svg>
+    </div>
+    <h1 class="hero-title">HERBALIST</h1>
+    <div class="hero-world">WORLD</div>
+    <div class="hero-arabic-title ar">عالم الأعشاب الطبية</div>
+    <p class="hero-subtitle">
+      <span class="fr">L'encyclopédie mondiale des plantes médicinales</span>
+      <span class="en">The world encyclopedia of medicinal plants</span>
+      <span class="ar-text ar">الموسوعة العالمية للنباتات الطبية</span>
+    </p>
+    <div class="hero-divider"><div class="hdl"></div><div class="hdo">✦</div><div class="hdl"></div></div>
+    <p class="hero-desc">
+      <span class="fr">Un référentiel académique rigoureux — plantes médicinales, médecine chinoise, minceur, longévité, phytothérapie vétérinaire et projets de culture à travers le monde.</span>
+      <span class="en">A rigorous academic reference — medicinal plants, Chinese medicine, slimming, longevity, veterinary phytotherapy and cultivation projects around the world.</span>
+      <span class="ar-text ar">مرجع أكاديمي صارم — النباتات الطبية، الطب الصيني، التخسيس، طول العمر، العلاج النباتي البيطري ومشاريع الزراعة حول العالم.</span>
+    </p>
+    <div class="hero-cta">
+      <a href="#plantes" class="btn-p"><span class="fr">Explorer</span><span class="en">Explore</span><span class="ar-text ar">استكشف</span></a>
+      <a href="#tcm" class="btn-o"><span class="fr">Médecine Chinoise</span><span class="en">Chinese Medicine</span><span class="ar-text ar">الطب الصيني</span></a>
+      <a href="#journal" class="btn-o"><span class="fr">Le Journal</span><span class="en">The Journal</span><span class="ar-text ar">المجلة</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-band">
+  <div class="stat-item"><span class="stat-n">500+</span><span class="stat-l fr">Plantes</span><span class="stat-l en">Plants</span><span class="stat-l ar-text ar">نبات</span></div>
+  <div class="stat-item"><span class="stat-n">3</span><span class="stat-l fr">Langues</span><span class="stat-l en">Languages</span><span class="stat-l ar-text ar">لغات</span></div>
+  <div class="stat-item"><span class="stat-n">3</span><span class="stat-l fr">Médecines du monde</span><span class="stat-l en">World medicines</span><span class="stat-l ar-text ar">طب العالم</span></div>
+  <div class="stat-item"><span class="stat-n">12</span><span class="stat-l fr">Sources académiques</span><span class="stat-l en">Academic sources</span><span class="stat-l ar-text ar">مصادر أكاديمية</span></div>
+  <div class="stat-item"><span class="stat-n">365</span><span class="stat-l fr">Publications/an</span><span class="stat-l en">Publications/year</span><span class="stat-l ar-text ar">منشور/سنة</span></div>
+</div>
+
+<!-- MINCEUR & LONGÉVITÉ -->
+<section id="wellness" class="wellness-section">
+  <div class="wellness-inner">
+    <div class="section-header reveal">
+      <div class="eyebrow"><span class="fr">Bien-être & Santé naturelle</span><span class="en">Wellness & Natural Health</span><span class="ar-text ar">الصحة الطبيعية</span></div>
+      <h2 class="sec-title"><span class="fr">Minceur · Longévité · Vitalité</span><span class="en">Slimming · Longevity · Vitality</span><span class="ar-text ar">التخسيس · طول العمر · الحيوية</span></h2>
+      <p class="sec-sub"><span class="fr">Les plantes que la science valide</span><span class="en">Plants validated by science</span><span class="ar-text ar">النباتات التي يثبتها العلم</span></p>
+    </div>
+    <div class="wellness-grid reveal">
+      <!-- MINCEUR -->
+      <div class="wellness-panel">
+        <div class="wp-icon slim">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5a9a40" stroke-width="1.5"><path d="M12 2C8 6 6 9 6 13a6 6 0 0 0 12 0c0-4-2-7-6-11z"/><path d="M12 13v5"/><path d="M9 18h6"/></svg>
+        </div>
+        <div class="wp-tag"><span class="fr">Minceur & Métabolisme</span><span class="en">Slimming & Metabolism</span><span class="ar-text ar">التخسيس والتمثيل الغذائي</span></div>
+        <h3 class="wp-title"><span class="fr">Les plantes qui soutiennent votre silhouette</span><span class="en">Plants that support your figure</span><span class="ar-text ar">النباتات التي تدعم قوامك</span></h3>
+        <p class="wp-text"><span class="fr">Sans promesses miracles — des plantes dont l'action sur le métabolisme, la glycémie ou la rétention d'eau est documentée scientifiquement et validée par l'EMA ou des méta-analyses rigoureuses.</span><span class="en">Without miracle promises — plants whose action on metabolism, blood sugar or water retention is scientifically documented and validated by the EMA or rigorous meta-analyses.</span><span class="ar-text ar">بدون وعود معجزة — نباتات موثقة علمياً لتأثيرها على الأيض وسكر الدم واحتباس الماء.</span></p>
+        <div class="wp-plants">
+          <div class="wp-plant"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5a9a40" stroke-width="1.5"><path d="M12 2C8 6 6 9 6 13a6 6 0 0 0 12 0c0-4-2-7-6-11z"/></svg><div><span class="wp-plant-name">THÉ VERT</span><span class="wp-plant-effect fr"> — Active la thermogenèse, brûle les graisses</span><span class="wp-plant-effect en"> — Activates thermogenesis</span><span class="wp-plant-effect ar-text ar"> — يحفز حرق الدهون</span></div></div>
+          <div class="wp-plant"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5a9a40" stroke-width="1.5"><circle cx="12" cy="12" r="10"/></svg><div><span class="wp-plant-name">CANNELLE</span><span class="wp-plant-effect fr"> — Régule la glycémie postprandiale</span><span class="wp-plant-effect en"> — Regulates blood sugar</span><span class="wp-plant-effect ar-text ar"> — ينظم نسبة السكر في الدم</span></div></div>
+          <div class="wp-plant"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5a9a40" stroke-width="1.5"><path d="M12 2C8 6 6 9 6 13a6 6 0 0 0 12 0c0-4-2-7-6-11z"/></svg><div><span class="wp-plant-name">PISSENLIT</span><span class="wp-plant-effect fr"> — Drainant naturel, détox foie</span><span class="wp-plant-effect en"> — Natural drainer, liver detox</span><span class="wp-plant-effect ar-text ar"> — مدر طبيعي، إزالة السموم من الكبد</span></div></div>
+          <div class="wp-plant"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5a9a40" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg><div><span class="wp-plant-name">GARCINIA CAMBOGIA</span><span class="wp-plant-effect fr"> — Réduit l'appétit (HCA)</span><span class="wp-plant-effect en"> — Reduces appetite (HCA)</span><span class="wp-plant-effect ar-text ar"> — يقلل الشهية</span></div></div>
+        </div>
+        <p class="wp-source">Sources : PubMed · EMA/HMPC · Cochrane Reviews</p>
+      </div>
+      <!-- LONGÉVITÉ -->
+      <div class="wellness-panel dark">
+        <div class="wp-icon dark-ico">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c8a84a" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="wp-tag"><span class="fr">Longévité & Vitalité</span><span class="en">Longevity & Vitality</span><span class="ar-text ar">طول العمر والحيوية</span></div>
+        <h3 class="wp-title"><span class="fr">Les secrets des centenaires</span><span class="en">The secrets of centenarians</span><span class="ar-text ar">أسرار المعمرين</span></h3>
+        <p class="wp-text"><span class="fr">Okinawa, Sardaigne, Ikaria — les zones bleues où l'on vit le plus longtemps partagent un recours commun aux plantes adaptogènes et antioxydantes. La science confirme ce que les traditions savaient depuis des siècles.</span><span class="en">Okinawa, Sardinia, Ikaria — the blue zones where people live the longest share a common use of adaptogenic and antioxidant plants. Science confirms what traditions knew for centuries.</span><span class="ar-text ar">أوكيناوا، سردينيا، إيكاريا — المناطق الزرقاء تشترك في استخدام نباتات التكيف ومضادات الأكسدة. يؤكد العلم ما عرفته التقاليد منذ قرون.</span></p>
+        <div class="wp-plants">
+          <div class="wp-plant"><div><span class="wp-plant-name">ASHWAGANDHA</span><span class="wp-plant-effect fr"> — Adaptogène, réduit le cortisol</span><span class="wp-plant-effect en"> — Adaptogen, reduces cortisol</span><span class="wp-plant-effect ar-text ar"> — نبات تكيفي، يقلل الكورتيزول</span></div></div>
+          <div class="wp-plant"><div><span class="wp-plant-name">GINSENG ASIATIQUE</span><span class="wp-plant-effect fr"> — Énergie, mémoire, immunité</span><span class="wp-plant-effect en"> — Energy, memory, immunity</span><span class="wp-plant-effect ar-text ar"> — طاقة، ذاكرة، مناعة</span></div></div>
+          <div class="wp-plant"><div><span class="wp-plant-name">MORINGA</span><span class="wp-plant-effect fr"> — 90 nutriments, antioxydant puissant</span><span class="wp-plant-effect en"> — 90 nutrients, powerful antioxidant</span><span class="wp-plant-effect ar-text ar"> — ٩٠ عنصراً غذائياً، مضاد أكسدة قوي</span></div></div>
+          <div class="wp-plant"><div><span class="wp-plant-name">CURCUMA</span><span class="wp-plant-effect fr"> — Anti-âge, neuroprotecteur</span><span class="wp-plant-effect en"> — Anti-aging, neuroprotective</span><span class="wp-plant-effect ar-text ar"> — مضاد للشيخوخة، حماية عصبية</span></div></div>
+        </div>
+        <p class="wp-source">Sources : Blue Zones Research · PubMed · Nature Aging 2024</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MÉDECINE TRADITIONNELLE CHINOISE -->
+<section id="tcm" class="tcm-section">
+  <div class="tcm-inner">
+    <div class="tcm-header reveal">
+      <div class="tcm-eyebrow"><span class="fr">Traditions millénaires</span><span class="en">Millennial traditions</span><span class="ar-text ar">تقاليد عريقة</span></div>
+      <div class="tcm-title"><span class="fr">Médecine Traditionnelle Chinoise</span><span class="en">Traditional Chinese Medicine</span><span class="ar-text ar">الطب الصيني التقليدي</span></div>
+      <div class="tcm-chinese">中医药</div>
+      <div class="tcm-subtitle"><span class="fr">5 000 ans de sagesse botanique — reconnue par l'OMS depuis 2019</span><span class="en">5,000 years of botanical wisdom — recognized by WHO since 2019</span><span class="ar-text ar">٥٠٠٠ سنة من الحكمة النباتية — معترف بها من منظمة الصحة العالمية منذ ٢٠١٩</span></div>
+    </div>
+
+    <!-- 5 ÉLÉMENTS -->
+    <div class="five-elements reveal">
+      <div class="element-card el-wood">
+        <span class="el-symbol">🌿</span>
+        <span class="el-cn">木</span>
+        <span class="el-name" style="color:#a8d880;"><span class="fr">BOIS</span><span class="en">WOOD</span><span class="ar-text ar">الخشب</span></span>
+        <span class="el-organ" style="color:rgba(168,216,128,0.6);"><span class="fr">Foie · Vésicule</span><span class="en">Liver · Gallbladder</span><span class="ar-text ar">الكبد · المرارة</span></span>
+        <span class="el-plant" style="color:rgba(168,216,128,0.5);">Schisandra · Buplèvre · Chrysanthème</span>
+      </div>
+      <div class="element-card el-fire">
+        <span class="el-symbol">🔥</span>
+        <span class="el-cn">火</span>
+        <span class="el-name" style="color:#e8a0a0;"><span class="fr">FEU</span><span class="en">FIRE</span><span class="ar-text ar">النار</span></span>
+        <span class="el-organ" style="color:rgba(232,160,160,0.6);"><span class="fr">Cœur · Intestin grêle</span><span class="en">Heart · Small intestine</span><span class="ar-text ar">القلب · الأمعاء الدقيقة</span></span>
+        <span class="el-plant" style="color:rgba(232,160,160,0.5);">Danshen · Longan · Lotus</span>
+      </div>
+      <div class="element-card el-earth">
+        <span class="el-symbol">🌍</span>
+        <span class="el-cn">土</span>
+        <span class="el-name" style="color:#e8d090;"><span class="fr">TERRE</span><span class="en">EARTH</span><span class="ar-text ar">الأرض</span></span>
+        <span class="el-organ" style="color:rgba(232,208,144,0.6);"><span class="fr">Rate · Estomac</span><span class="en">Spleen · Stomach</span><span class="ar-text ar">الطحال · المعدة</span></span>
+        <span class="el-plant" style="color:rgba(232,208,144,0.5);">Astragale · Réglisse · Gingembre</span>
+      </div>
+      <div class="element-card el-metal">
+        <span class="el-symbol">⚡</span>
+        <span class="el-cn">金</span>
+        <span class="el-name" style="color:#b0c8d8;"><span class="fr">MÉTAL</span><span class="en">METAL</span><span class="ar-text ar">المعدن</span></span>
+        <span class="el-organ" style="color:rgba(176,200,216,0.6);"><span class="fr">Poumons · Gros intestin</span><span class="en">Lungs · Large intestine</span><span class="ar-text ar">الرئتان · القولون</span></span>
+        <span class="el-plant" style="color:rgba(176,200,216,0.5);">Astragale · Fritillaire · Mucuna</span>
+      </div>
+      <div class="element-card el-water">
+        <span class="el-symbol">💧</span>
+        <span class="el-cn">水</span>
+        <span class="el-name" style="color:#90b0e8;"><span class="fr">EAU</span><span class="en">WATER</span><span class="ar-text ar">الماء</span></span>
+        <span class="el-organ" style="color:rgba(144,176,232,0.6);"><span class="fr">Reins · Vessie</span><span class="en">Kidneys · Bladder</span><span class="ar-text ar">الكليتان · المثانة</span></span>
+        <span class="el-plant" style="color:rgba(144,176,232,0.5);">Rehmannia · Schisandra · Morinda</span>
+      </div>
+    </div>
+
+    <!-- TCM PLANTS -->
+    <div class="tcm-grid reveal">
+      <div class="tcm-card">
+        <div class="tcm-cn-name">人参</div>
+        <div class="tcm-name">GINSENG ROUGE</div>
+        <div class="tcm-latin">Panax ginseng · Araliaceae</div>
+        <div class="tcm-element-badge">🌍 TERRE</div>
+        <div class="tcm-desc"><span class="fr">Tonique majeur du Qi en MTC. Améliore l'énergie, la mémoire et l'immunité. Utilisé depuis 2 000 ans. Plus de 500 études cliniques publiées sur PubMed.</span><span class="en">Major Qi tonic in TCM. Improves energy, memory and immunity. Used for 2,000 years. Over 500 clinical studies published on PubMed.</span><span class="ar-text ar">منشط رئيسي للطاقة في الطب الصيني. يحسن الطاقة والذاكرة والمناعة.</span></div>
+        <div class="tcm-tags"><span class="tcm-tag fr">Énergie</span><span class="tcm-tag en">Energy</span><span class="tcm-tag ar-text ar">طاقة</span><span class="tcm-tag fr">Adaptogène</span><span class="tcm-tag en">Adaptogen</span><span class="tcm-tag">⚠ HTA</span></div>
+      </div>
+      <div class="tcm-card">
+        <div class="tcm-cn-name">当归</div>
+        <div class="tcm-name">DONG QUAI</div>
+        <div class="tcm-latin">Angelica sinensis · Apiaceae</div>
+        <div class="tcm-element-badge">🔥 FEU</div>
+        <div class="tcm-desc"><span class="fr">Surnommée "ginseng féminin". Utilisée pour les troubles menstruels, l'anémie et la circulation. L'une des plantes les plus prescrites en MTC depuis des siècles.</span><span class="en">Called "female ginseng". Used for menstrual disorders, anemia and circulation. One of the most prescribed plants in TCM for centuries.</span><span class="ar-text ar">تُسمى "الجنسنغ الأنثوي". تُستخدم لاضطرابات الدورة الشهرية والأنيميا.</span></div>
+        <div class="tcm-tags"><span class="tcm-tag fr">Féminin</span><span class="tcm-tag en">Feminine</span><span class="tcm-tag ar-text ar">صحة المرأة</span><span class="tcm-tag fr">Sang</span><span class="tcm-tag en">Blood</span><span class="tcm-tag">⚠ Anticoag.</span></div>
+      </div>
+      <div class="tcm-card">
+        <div class="tcm-cn-name">黄芪</div>
+        <div class="tcm-name">ASTRAGALE</div>
+        <div class="tcm-latin">Astragalus membranaceus · Fabaceae</div>
+        <div class="tcm-element-badge">🌍 TERRE</div>
+        <div class="tcm-desc"><span class="fr">Immunomodulateur majeur de la MTC. Des études récentes démontrent son potentiel antivieillissement via les télomères et son action immunostimulante documentée.</span><span class="en">Major immunomodulator in TCM. Recent studies demonstrate its anti-aging potential via telomeres and its documented immunostimulating action.</span><span class="ar-text ar">معدل مناعي رئيسي في الطب الصيني. دراسات حديثة تثبت إمكاناته في مكافحة الشيخوخة.</span></div>
+        <div class="tcm-tags"><span class="tcm-tag fr">Immunité</span><span class="tcm-tag en">Immunity</span><span class="tcm-tag ar-text ar">مناعة</span><span class="tcm-tag fr">Longévité</span><span class="tcm-tag en">Longevity</span></div>
+      </div>
+      <div class="tcm-card">
+        <div class="tcm-cn-name">灵芝</div>
+        <div class="tcm-name">RÉISHI</div>
+        <div class="tcm-latin">Ganoderma lucidum · Ganodermataceae</div>
+        <div class="tcm-element-badge">🔥 FEU</div>
+        <div class="tcm-desc"><span class="fr">Le "champignon de l'immortalité". Utilisé depuis 2 000 ans comme tonique du Shen (esprit). Propriétés immuno-modulatrices et antitumorales étudiées intensivement.</span><span class="en">The "mushroom of immortality". Used for 2,000 years as a Shen (spirit) tonic. Immuno-modulatory and antitumor properties intensively studied.</span><span class="ar-text ar">"فطر الخلود". مستخدم منذ ٢٠٠٠ سنة. خصائص معدلة للمناعة ومضادة للأورام مدروسة بكثافة.</span></div>
+        <div class="tcm-tags"><span class="tcm-tag fr">Esprit</span><span class="tcm-tag en">Mind</span><span class="tcm-tag ar-text ar">الروح</span><span class="tcm-tag fr">Immunité</span><span class="tcm-tag en">Immunity</span></div>
+      </div>
+      <div class="tcm-card">
+        <div class="tcm-cn-name">五味子</div>
+        <div class="tcm-name">SCHISANDRA</div>
+        <div class="tcm-latin">Schisandra chinensis · Schisandraceae</div>
+        <div class="tcm-element-badge">🌿 BOIS</div>
+        <div class="tcm-desc"><span class="fr">Plante des 5 saveurs — la seule à contenir les 5 saveurs de la MTC. Hépatoprotectrice, adaptogène, améliore les performances cognitives et la résistance au stress.</span><span class="en">Plant of 5 flavors — the only one containing all 5 TCM flavors. Hepatoprotective, adaptogenic, improves cognitive performance and stress resistance.</span><span class="ar-text ar">نبات الخمسة نكهات — الوحيد الذي يحتوي على جميع نكهات الطب الصيني الخمس.</span></div>
+        <div class="tcm-tags"><span class="tcm-tag fr">Foie</span><span class="tcm-tag en">Liver</span><span class="tcm-tag ar-text ar">الكبد</span><span class="tcm-tag fr">Stress</span></div>
+      </div>
+      <div class="tcm-card">
+        <div class="tcm-cn-name">枸杞</div>
+        <div class="tcm-name">BAIES DE GOJI</div>
+        <div class="tcm-latin">Lycium barbarum · Solanaceae</div>
+        <div class="tcm-element-badge">💧 EAU</div>
+        <div class="tcm-desc"><span class="fr">Nourrit le Yin des Reins et du Foie. Antioxydant puissant (zéaxanthine), protège la vue. Populaire en Occident, bien documenté scientifiquement dans les études sur la longévité.</span><span class="en">Nourishes Kidney and Liver Yin. Powerful antioxidant (zeaxanthin), protects vision. Popular in the West, well documented scientifically in longevity studies.</span><span class="ar-text ar">يغذي يين الكلى والكبد. مضاد أكسدة قوي يحمي البصر.</span></div>
+        <div class="tcm-tags"><span class="tcm-tag fr">Vision</span><span class="tcm-tag en">Vision</span><span class="tcm-tag ar-text ar">البصر</span><span class="tcm-tag fr">Longévité</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VÉTÉRINAIRE -->
+<section id="vet" class="vet-section">
+  <div class="vet-inner">
+    <div class="section-header reveal">
+      <div class="eyebrow"><span class="fr">Phytothérapie animale</span><span class="en">Animal phytotherapy</span><span class="ar-text ar">العلاج النباتي البيطري</span></div>
+      <h2 class="sec-title"><span class="fr">Phytothérapie Vétérinaire</span><span class="en">Veterinary Phytotherapy</span><span class="ar-text ar">العلاج النباتي للحيوانات</span></h2>
+      <p class="sec-sub"><span class="fr">Les plantes au service de la santé animale — avec les mêmes exigences de rigueur scientifique</span><span class="en">Plants for animal health — with the same scientific rigor requirements</span><span class="ar-text ar">النباتات في خدمة صحة الحيوانات</span></p>
+    </div>
+    <div class="vet-grid reveal">
+      <div class="vet-card">
+        <span class="vet-animal">🐕</span>
+        <div class="vet-animal-name"><span class="fr">CHIEN</span><span class="en">DOG</span><span class="ar-text ar">الكلب</span></div>
+        <div class="vet-plant-item"><span class="vet-plant-name">VALÉRIANE</span><span class="vet-plant-use fr">Anxiété, voyages, orages — sédatif doux bien toléré</span><span class="vet-plant-use en">Anxiety, travel, storms — well-tolerated mild sedative</span><span class="vet-plant-use ar-text ar">القلق، السفر — مهدئ خفيف</span></div>
+        <div class="vet-plant-item"><span class="vet-plant-name">CALENDULA</span><span class="vet-plant-use fr">Soins cutanés, plaies, dermatites — usage externe</span><span class="vet-plant-use en">Skin care, wounds, dermatitis — external use</span><span class="vet-plant-use ar-text ar">العناية بالجلد، الجروح</span></div>
+        <div class="vet-plant-item"><span class="vet-plant-name">GINGEMBRE</span><span class="vet-plant-use fr">Nausées en voiture, digestion</span><span class="vet-plant-use en">Car sickness, digestion</span><span class="vet-plant-use ar-text ar">دوار السيارة والهضم</span></div>
+        <div class="vet-warning">⚠ <span class="fr">Jamais d'huiles essentielles non diluées. Xylitol toxique.</span><span class="en">Never undiluted essential oils. Xylitol toxic.</span><span class="ar-text ar">لا تستخدم الزيوت الأساسية غير مخففة.</span></div>
+      </div>
+      <div class="vet-card">
+        <span class="vet-animal">🐈</span>
+        <div class="vet-animal-name"><span class="fr">CHAT</span><span class="en">CAT</span><span class="ar-text ar">القطة</span></div>
+        <div class="vet-plant-item"><span class="vet-plant-name">HERBE À CHAT</span><span class="vet-plant-use fr">Nepeta cataria — stimulant naturel, jeu et bien-être</span><span class="vet-plant-use en">Nepeta cataria — natural stimulant, play and wellbeing</span><span class="vet-plant-use ar-text ar">محفز طبيعي، لعب ورفاهية</span></div>
+        <div class="vet-plant-item"><span class="vet-plant-name">MÉLISSE</span><span class="vet-plant-use fr">Stress et anxiété légère — en infusion très diluée</span><span class="vet-plant-use en">Stress and mild anxiety — in very diluted infusion</span><span class="vet-plant-use ar-text ar">التوتر والقلق الخفيف</span></div>
+        <div class="vet-warning" style="border-color:#c0392b;background:rgba(192,57,43,0.08);">🚫 <strong><span class="fr">TOXIQUES pour les chats :</span><span class="en">TOXIC for cats:</span><span class="ar-text ar">سام للقطط:</span></strong> <span class="fr">Huiles essentielles (thym, menthe, eucalyptus), ail, oignon, raisins</span><span class="en">Essential oils (thyme, mint, eucalyptus), garlic, onion, grapes</span><span class="ar-text ar">الزيوت الأساسية، الثوم، البصل</span></div>
+      </div>
+      <div class="vet-card">
+        <span class="vet-animal">🐴</span>
+        <div class="vet-animal-name"><span class="fr">CHEVAL</span><span class="en">HORSE</span><span class="ar-text ar">الحصان</span></div>
+        <div class="vet-plant-item"><span class="vet-plant-name">HARPAGOPHYTUM</span><span class="vet-plant-use fr">Articulations, tendinites — très utilisé en sport équestre</span><span class="vet-plant-use en">Joints, tendinitis — widely used in equestrian sport</span><span class="vet-plant-use ar-text ar">المفاصل والأوتار في رياضة الفروسية</span></div>
+        <div class="vet-plant-item"><span class="vet-plant-name">ARNICA</span><span class="vet-plant-use fr">Contusions, chocs musculaires — usage externe uniquement</span><span class="vet-plant-use en">Bruises, muscle shocks — external use only</span><span class="vet-plant-use ar-text ar">الكدمات، الصدمات العضلية</span></div>
+        <div class="vet-plant-item"><span class="vet-plant-name">ALOÉ VÉRA</span><span class="vet-plant-use fr">Soins de peau, brûlures légères, irritations</span><span class="vet-plant-use en">Skin care, minor burns, irritations</span><span class="vet-plant-use ar-text ar">العناية بالجلد، الحروق الخفيفة</span></div>
+        <div class="vet-warning">⚠ <span class="fr">Toujours consulter un vétérinaire avant traitement.</span><span class="en">Always consult a vet before treatment.</span><span class="ar-text ar">استشر الطبيب البيطري دائماً.</span></div>
+      </div>
+      <div class="vet-card">
+        <span class="vet-animal">🐦</span>
+        <div class="vet-animal-name"><span class="fr">OISEAUX & AUTRES</span><span class="en">BIRDS & OTHERS</span><span class="ar-text ar">الطيور وغيرها</span></div>
+        <div class="vet-plant-item"><span class="vet-plant-name">CHARDON-MARIE</span><span class="vet-plant-use fr">Hépatoprotecteur — utilisé chez les oiseaux captifs</span><span class="vet-plant-use en">Hepatoprotective — used in captive birds</span><span class="vet-plant-use ar-text ar">حماية الكبد للطيور في الأسر</span></div>
+        <div class="vet-plant-item"><span class="vet-plant-name">SPIRULINE</span><span class="vet-plant-use fr">Complément nutritionnel naturel pour volailles et poissons</span><span class="vet-plant-use en">Natural nutritional supplement for poultry and fish</span><span class="vet-plant-use ar-text ar">مكمل غذائي طبيعي للدواجن والأسماك</span></div>
+        <div class="vet-warning" style="border-color:#c0392b;background:rgba(192,57,43,0.08);">🚫 <span class="fr">La plupart des huiles essentielles sont toxiques pour les oiseaux.</span><span class="en">Most essential oils are toxic to birds.</span><span class="ar-text ar">معظم الزيوت الأساسية سامة للطيور.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJETS MONDE -->
+<section id="world" class="world-section">
+  <div class="world-inner">
+    <div class="world-eyebrow reveal"><span class="fr">Culture · Conditionnement · Commerce équitable</span><span class="en">Cultivation · Processing · Fair trade</span><span class="ar-text ar">الزراعة · التعبئة · التجارة العادلة</span></div>
+    <h2 class="world-title reveal"><span class="fr">Projets à Travers le Monde</span><span class="en">Projects Around the World</span><span class="ar-text ar">مشاريع حول العالم</span></h2>
+    <p class="world-subtitle reveal"><span class="fr">Initiatives remarquables de culture et valorisation des plantes médicinales</span><span class="en">Remarkable cultivation and development initiatives for medicinal plants</span><span class="ar-text ar">مبادرات رائدة لزراعة وتثمين النباتات الطبية</span></p>
+    <div class="world-grid reveal">
+      <div class="world-card">
+        <span class="wc-flag">🇲🇦</span>
+        <div class="wc-country">MAROC</div>
+        <div class="wc-plant"><span class="fr">Safran de Taliouine</span><span class="en">Taliouine Saffron</span><span class="ar-text ar">زعفران تالوين</span></div>
+        <div class="wc-desc"><span class="fr">La coopérative Souktana regroupe 400 familles productrices dans l'Anti-Atlas. Label IGP européen obtenu en 2010. Production annuelle : 3 tonnes — l'une des meilleures qualités mondiales.</span><span class="en">The Souktana cooperative brings together 400 producing families in the Anti-Atlas. European IGP label obtained in 2010. Annual production: 3 tonnes — one of the world's best qualities.</span><span class="ar-text ar">تعاونية سوكتانة تضم ٤٠٠ عائلة منتجة في جبال الأطلس الصغير. تصنيف حماية الأصل الجغرافي الأوروبي.</span></div>
+        <div class="wc-stats"><span class="wc-stat fr">400 familles</span><span class="wc-stat en">400 families</span><span class="wc-stat ar-text ar">٤٠٠ عائلة</span><span class="wc-stat">IGP 2010</span><span class="wc-stat">3 t/an</span></div>
+      </div>
+      <div class="world-card">
+        <span class="wc-flag">🇮🇳</span>
+        <div class="wc-country">INDE</div>
+        <div class="wc-plant"><span class="fr">Ashwagandha biologique</span><span class="en">Organic Ashwagandha</span><span class="ar-text ar">أشواغاندا عضوية</span></div>
+        <div class="wc-desc"><span class="fr">Le Rajasthan concentre 70% de la production mondiale d'ashwagandha. Développement de filières bio certifiées pour l'export vers l'Europe et les États-Unis. Valorisation de la pharmacopée ayurvédique.</span><span class="en">Rajasthan concentrates 70% of world ashwagandha production. Development of certified organic supply chains for export to Europe and the USA. Valorization of Ayurvedic pharmacopoeia.</span><span class="ar-text ar">تحتضن ولاية راجستان ٧٠٪ من الإنتاج العالمي للأشواغاندا. تطوير سلاسل توريد عضوية معتمدة.</span></div>
+        <div class="wc-stats"><span class="wc-stat">70% mondial</span><span class="wc-stat fr">Bio certifié</span><span class="wc-stat en">Bio certified</span><span class="wc-stat ar-text ar">عضوي معتمد</span></div>
+      </div>
+      <div class="world-card">
+        <span class="wc-flag">🇫🇷</span>
+        <div class="wc-country">FRANCE · PROVENCE</div>
+        <div class="wc-plant"><span class="fr">Lavande AOC Haute-Provence</span><span class="en">Lavender AOC Haute-Provence</span><span class="ar-text ar">خزامى بروفانس المحمية</span></div>
+        <div class="wc-desc"><span class="fr">1 500 producteurs sur 25 000 hectares. AOC depuis 1981. Distillation artisanale en alambics en cuivre. Crise liée au dépérissement et au jaunissement — programmes de replantation en cours.</span><span class="en">1,500 producers on 25,000 hectares. AOC since 1981. Artisan distillation in copper stills. Crisis related to decline and yellowing — replanting programs underway.</span><span class="ar-text ar">١٥٠٠ منتج على ٢٥٠٠٠ هكتار. تقطير حرفي في الأواني النحاسية.</span></div>
+        <div class="wc-stats"><span class="wc-stat">25 000 ha</span><span class="wc-stat">AOC 1981</span><span class="wc-stat">1 500 prod.</span></div>
+      </div>
+      <div class="world-card">
+        <span class="wc-flag">🇩🇿</span>
+        <div class="wc-country">ALGÉRIE</div>
+        <div class="wc-plant"><span class="fr">Armoise blanche & Romarin d'Atlas</span><span class="en">White wormwood & Atlas rosemary</span><span class="ar-text ar">الشيح الأبيض وإكليل الجبل</span></div>
+        <div class="wc-desc"><span class="fr">L'Algérie dispose d'un patrimoine phytothérapeutique exceptionnel — armoise (Artemisia herba-alba), romarin de montagne, géranium rosat de Kabylie, thym des djebels. Potentiel de valorisation internationale considérable encore peu exploité.</span><span class="en">Algeria has exceptional phytotherapeutic heritage — artemisia, mountain rosemary, Kabyle rose geranium, djebel thyme. Considerable international development potential still largely untapped.</span><span class="ar-text ar">تمتلك الجزائر تراثاً نباتياً استثنائياً — الشيح، إكليل الجبل، إبرة الراعي الكابيلية، الزعتر البري. إمكانات تثمين دولية هائلة لم تُستغل بعد.</span></div>
+        <div class="wc-stats"><span class="wc-stat fr">Potentiel bio</span><span class="wc-stat en">Bio potential</span><span class="wc-stat ar-text ar">إمكانات عضوية</span><span class="wc-stat fr">Export à développer</span><span class="wc-stat en">Export to develop</span></div>
+      </div>
+      <div class="world-card">
+        <span class="wc-flag">🇨🇳</span>
+        <div class="wc-country">CHINE</div>
+        <div class="wc-plant"><span class="fr">Ginseng de Jilin</span><span class="en">Jilin Ginseng</span><span class="ar-text ar">الجنسنغ الصيني</span></div>
+        <div class="wc-desc"><span class="fr">La province de Jilin produit 80% du ginseng mondial. Culture de 6 à 15 ans avant récolte. Marché du ginseng sauvage en voie d'épuisement — programmes de conservation et culture durable développés.</span><span class="en">Jilin province produces 80% of world ginseng. 6 to 15 years cultivation before harvest. Wild ginseng market on the verge of exhaustion — conservation and sustainable cultivation programs developed.</span><span class="ar-text ar">تنتج مقاطعة جيلين ٨٠٪ من الجنسنغ العالمي. ٦ إلى ١٥ سنة من الزراعة قبل الحصاد.</span></div>
+        <div class="wc-stats"><span class="wc-stat">80% mondial</span><span class="wc-stat fr">6-15 ans culture</span><span class="wc-stat en">6-15 yrs growth</span></div>
+      </div>
+      <div class="world-card">
+        <span class="wc-flag">🇰🇪</span>
+        <div class="wc-country">AFRIQUE DE L'EST</div>
+        <div class="wc-plant"><span class="fr">Moringa bio — filières durables</span><span class="en">Organic Moringa — sustainable supply chains</span><span class="ar-text ar">المورينغا العضوية — سلاسل توريد مستدامة</span></div>
+        <div class="wc-desc"><span class="fr">Le Kenya, l'Éthiopie et la Tanzanie développent des coopératives de moringa bio pour l'export. "Arbre miracle" : croissance rapide, résistance à la sécheresse, 90 nutriments. Marché mondial en forte croissance.</span><span class="en">Kenya, Ethiopia and Tanzania are developing organic moringa cooperatives for export. "Miracle tree": fast growth, drought resistance, 90 nutrients. Rapidly growing global market.</span><span class="ar-text ar">كينيا وإثيوبيا وتنزانيا تطور تعاونيات المورينغا العضوية للتصدير. "شجرة المعجزة": نمو سريع، مقاومة للجفاف، ٩٠ عنصراً غذائياً.</span></div>
+        <div class="wc-stats"><span class="wc-stat">90 nutriments</span><span class="wc-stat fr">Marché +40%/an</span><span class="wc-stat en">Market +40%/yr</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- PLANTES MARINES & SOUS-MARINES -->
+<section id="marine" class="marine-section">
+  <div class="marine-inner">
+    <div class="marine-eyebrow reveal"><span class="fr">Algues · Organismes marins · Phycocosmetologie</span><span class="en">Seaweeds · Marine organisms · Phycocosmetics</span><span class="ar-text ar">الأعشاب البحرية · الكائنات البحرية</span></div>
+    <h2 class="marine-title reveal"><span class="fr">Plantes Marines & Sous-marines</span><span class="en">Marine & Underwater Plants</span><span class="ar-text ar">النباتات البحرية والمائية</span></h2>
+    <p class="marine-subtitle reveal"><span class="fr">Les trésors thérapeutiques des océans — une pharmacopée encore largement inexploitée</span><span class="en">The therapeutic treasures of the oceans — a pharmacopoeia still largely untapped</span><span class="ar-text ar">كنوز المحيطات العلاجية — صيدلانية لا تزال غير مستغلة</span></p>
+
+    <div class="marine-grid reveal">
+
+      <div class="marine-card">
+        <span class="marine-icon">🌊</span>
+        <div class="marine-name">SPIRULINE</div>
+        <div class="marine-latin">Arthrospira platensis · Cyanobactérie</div>
+        <div class="marine-desc"><span class="fr">Cyanobactérie d'eau douce aux propriétés nutritionnelles exceptionnelles. Riche en protéines complètes (60-70%), fer, vitamine B12, phycocyanine aux puissants effets anti-inflammatoires. Validée par l'OMS comme aliment complet.</span><span class="en">Freshwater cyanobacterium with exceptional nutritional properties. Rich in complete proteins (60-70%), iron, vitamin B12, phycocyanin with powerful anti-inflammatory effects. Validated by WHO as a complete food.</span><span class="ar-text ar">بكتيريا زرقاء-خضراء للمياه العذبة. غنية بالبروتينات الكاملة (60-70٪) والحديد وفيتامين B12. معتمدة من منظمة الصحة العالمية.</span></div>
+        <div class="marine-tags"><span class="marine-tag fr">Immunité</span><span class="marine-tag en">Immunity</span><span class="marine-tag fr">Énergie</span><span class="marine-tag fr">Détox</span></div>
+        <div class="marine-warn"><span class="fr">⚠ Phénylcétonurie, anticoagulants. Sourcing certifié obligatoire.</span><span class="en">⚠ Phenylketonuria, anticoagulants. Certified sourcing required.</span><span class="ar-text ar">⚠ تجنب في الفينيل كيتونوريا.</span></div>
+      </div>
+
+      <div class="marine-card">
+        <span class="marine-icon">🟤</span>
+        <div class="marine-name">FUCUS VÉSICULEUX</div>
+        <div class="marine-latin">Fucus vesiculosus · Phaeophyceae</div>
+        <div class="marine-desc"><span class="fr">Algue brune riche en iode, fucane, et alginates. Stimule le métabolisme thyroïdien, action drainage et minceur validée par l'EMA. Traditionnellement utilisée dans les zones côtières pour ses propriétés reminéralisantes.</span><span class="en">Brown algae rich in iodine, fucoidan, and alginates. Stimulates thyroid metabolism, drainage and slimming action validated by EMA. Traditionally used in coastal areas for its remineralizing properties.</span><span class="ar-text ar">أعشاب بنية غنية باليود والفوكويدان. تحفز التمثيل الغذائي للغدة الدرقية. معتمدة من EMA.</span></div>
+        <div class="marine-tags"><span class="marine-tag fr">Minceur</span><span class="marine-tag en">Slimming</span><span class="marine-tag fr">Thyroïde</span><span class="marine-tag fr">Minéraux</span></div>
+        <div class="marine-warn"><span class="fr">⚠ Contre-indiqué en cas d'hyperthyroïdie. Interaction avec anticoagulants.</span><span class="en">⚠ Contraindicated in hyperthyroidism. Interaction with anticoagulants.</span><span class="ar-text ar">⚠ موانع في فرط نشاط الغدة الدرقية.</span></div>
+      </div>
+
+      <div class="marine-card">
+        <span class="marine-icon">🌿</span>
+        <div class="marine-name">LAMINAIRE / KOMBU</div>
+        <div class="marine-latin">Laminaria digitata · Ochrophyta</div>
+        <div class="marine-desc"><span class="fr">Algue géante des eaux froides, source majeure d'acide alginique, d'iode et de laminarine. Prébiotique reconnu, régule la glycémie, purifie les métaux lourds par chélation. Base de la phycocosmétologie moderne.</span><span class="en">Giant cold-water algae, major source of alginic acid, iodine and laminarin. Recognized prebiotic, regulates blood sugar, purifies heavy metals by chelation. Basis of modern phycocosmetics.</span><span class="ar-text ar">أعشاب عملاقة للمياه الباردة. مصدر رئيسي لحمض الألجينيك واليود. يُنظم نسبة السكر في الدم.</span></div>
+        <div class="marine-tags"><span class="marine-tag fr">Prébiotique</span><span class="marine-tag en">Prebiotic</span><span class="marine-tag fr">Détox métaux</span></div>
+        <div class="marine-warn"><span class="fr">⚠ Iode — surveiller la dose en cas de pathologie thyroïdienne.</span><span class="en">⚠ Iodine — monitor dosage with thyroid conditions.</span><span class="ar-text ar">⚠ اليود — راقب الجرعة مع أمراض الغدة الدرقية.</span></div>
+      </div>
+
+      <div class="marine-card">
+        <span class="marine-icon">🔴</span>
+        <div class="marine-name">LITHOTHAMNIUM</div>
+        <div class="marine-latin">Lithothamnium calcareum · Corallinaceae</div>
+        <div class="marine-desc"><span class="fr">Algue rouge calcaire exceptionnellement riche en calcium (32%) et magnésium. Alternative naturelle aux suppléments calciques synthétiques. Études cliniques démontrent son efficacité sur la densité osseuse et l'ostéoporose.</span><span class="en">Calcareous red algae exceptionally rich in calcium (32%) and magnesium. Natural alternative to synthetic calcium supplements. Clinical studies demonstrate its efficacy on bone density and osteoporosis.</span><span class="ar-text ar">أعشاب حمراء جيرية غنية بالكالسيوم (32٪) والمغنيسيوم. بديل طبيعي لمكملات الكالسيوم الاصطناعية.</span></div>
+        <div class="marine-tags"><span class="marine-tag fr">Os</span><span class="marine-tag en">Bones</span><span class="marine-tag fr">Calcium</span><span class="marine-tag fr">Ostéoporose</span></div>
+        <div class="marine-warn"><span class="fr">⚠ Hypercalcémie, insuffisance rénale — consulter un médecin.</span><span class="en">⚠ Hypercalcemia, renal insufficiency — consult a doctor.</span><span class="ar-text ar">⚠ فرط الكالسيوم في الدم — استشر الطبيب.</span></div>
+      </div>
+
+      <div class="marine-card">
+        <span class="marine-icon">💚</span>
+        <div class="marine-name">CHLORELLE</div>
+        <div class="marine-latin">Chlorella vulgaris · Chlorophyta</div>
+        <div class="marine-desc"><span class="fr">Micro-algue d'eau douce monocellulaire riche en chlorophylle, protéines et CGF (Chlorella Growth Factor). Puissant agent de détoxification des métaux lourds (mercure, plomb, cadmium). Études cliniques prometteuses sur l'immunité.</span><span class="en">Unicellular freshwater microalgae rich in chlorophyll, proteins and CGF (Chlorella Growth Factor). Powerful heavy metal detoxification agent (mercury, lead, cadmium). Promising clinical studies on immunity.</span><span class="ar-text ar">طحالب مجهرية أحادية الخلية. قوية في إزالة السموم من المعادن الثقيلة (الزئبق، الرصاص).</span></div>
+        <div class="marine-tags"><span class="marine-tag fr">Détox</span><span class="marine-tag en">Detox</span><span class="marine-tag fr">Immunité</span><span class="marine-tag fr">Fer</span></div>
+        <div class="marine-warn"><span class="fr">⚠ Anticoagulants (vitamine K). Démarrer progressivement — effets détox intenses.</span><span class="en">⚠ Anticoagulants (vitamin K). Start gradually — intense detox effects.</span><span class="ar-text ar">⚠ ابدأ تدريجياً. تفاعل مع مضادات التخثر.</span></div>
+      </div>
+
+      <div class="marine-card">
+        <span class="marine-icon">🫧</span>
+        <div class="marine-name">POSIDONIE</div>
+        <div class="marine-latin">Posidonia oceanica · Posidoniaceae</div>
+        <div class="marine-desc"><span class="fr">Phanérogame marine endémique de Méditerranée — pas une algue, une vraie plante à fleurs sous-marine. Ses feuilles et rhizomes contiennent des polyphénols, flavonoïdes et magnésium. Indicateur majeur de la santé des écosystèmes marins méditerranéens.</span><span class="en">Marine phanerogam endemic to the Mediterranean — not an algae, a true underwater flowering plant. Its leaves and rhizomes contain polyphenols, flavonoids and magnesium. Major indicator of Mediterranean marine ecosystem health.</span><span class="ar-text ar">نبات بحري حقيقي يزهر تحت الماء في البحر المتوسط. يحتوي على بوليفينول وفلافونويد ومغنيسيوم.</span></div>
+        <div class="marine-tags"><span class="marine-tag fr">Méditerranée</span><span class="marine-tag en">Mediterranean</span><span class="marine-tag fr">Antioxydant</span><span class="marine-tag fr">Endémique</span></div>
+        <div class="marine-warn"><span class="fr">⚠ Espèce protégée — usage thérapeutique en recherche active. Ne pas récolter.</span><span class="en">⚠ Protected species — therapeutic use under active research. Do not harvest.</span><span class="ar-text ar">⚠ نوع محمي — الاستخدام العلاجي قيد البحث الفعال.</span></div>
+      </div>
+
+    </div>
+
+    <div class="marine-note reveal">
+      <p><span class="fr">✦ La phycologie médicinale (étude thérapeutique des algues) est l'une des frontières les plus prometteuses de la phytothérapie moderne. Les océans couvrent 71% de la Terre et abritent des milliers d'espèces aux propriétés encore inexplorées.</span><span class="en">✦ Medicinal phycology (therapeutic study of algae) is one of the most promising frontiers of modern phytotherapy. Oceans cover 71% of the Earth and harbor thousands of species with still unexplored properties.</span><span class="ar-text ar">✦ علم الطحالب الطبي هو أحد أكثر آفاق العلاج بالنباتات الحديثة واعداً. تغطي المحيطات 71٪ من الأرض.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- SANTÉ FÉMININE -->
+<section id="feminin" class="feminin-section">
+  <div class="feminin-inner">
+    <div class="feminin-eyebrow reveal"><span class="fr">Cycles · Fertilité · Ménopause · Bien-être global</span><span class="en">Cycles · Fertility · Menopause · Overall wellness</span><span class="ar-text ar">الدورة الشهرية · الخصوبة · انقطاع الطمث</span></div>
+    <h2 class="feminin-title reveal"><span class="fr">Phytothérapie au Féminin</span><span class="en">Women's Herbal Medicine</span><span class="ar-text ar">العلاج النباتي للمرأة</span></h2>
+    <p class="feminin-subtitle reveal"><span class="fr">Les plantes alliées de la santé féminine — du cycle à la ménopause, de la fertilité au bien-être quotidien</span><span class="en">Plants as allies of feminine health — from cycle to menopause, from fertility to daily wellness</span><span class="ar-text ar">النباتات حليفة صحة المرأة — من الدورة إلى سن اليأس ومن الخصوبة إلى الرفاهية اليومية</span></p>
+
+    <div class="feminin-grid reveal">
+
+      <div class="feminin-block">
+        <div class="fb-phase"><span class="fr">PHASE 1</span><span class="en">PHASE 1</span><span class="ar-text ar">المرحلة الأولى</span></div>
+        <div class="fb-title"><span class="fr">Cycle Menstruel & Dysménorrhée</span><span class="en">Menstrual Cycle & Dysmenorrhea</span><span class="ar-text ar">الدورة الشهرية وآلام الطمث</span></div>
+        <div class="fb-desc"><span class="fr">Régulation, douleurs et confort durant le cycle</span><span class="en">Regulation, pain and comfort during the cycle</span><span class="ar-text ar">تنظيم الدورة وتخفيف الآلام</span></div>
+        <div class="feminin-plant">
+          <div class="fp-name">ACHILLÉE</div>
+          <div class="fp-use"><span class="fr">Spasmes utérins, règles douloureuses — antispasmodique validé EMA. Achillea millefolium.</span><span class="en">Uterine spasms, painful periods — antispasmodic validated by EMA. Achillea millefolium.</span><span class="ar-text ar">تشنجات الرحم وآلام الدورة — مضاد تشنج معتمد من EMA.</span></div>
+        </div>
+        <div class="feminin-plant">
+          <div class="fp-name">GATTILIER</div>
+          <div class="fp-use"><span class="fr">Syndrome prémenstruel, irrégularités — agit sur la prolactine. Vitex agnus-castus, monographie EMA.</span><span class="en">PMS, irregularities — acts on prolactin. Vitex agnus-castus, EMA monograph.</span><span class="ar-text ar">متلازمة ما قبل الحيض — يؤثر على البرولاكتين. معتمد من EMA.</span></div>
+        </div>
+        <div class="feminin-plant">
+          <div class="fp-name">FRAMBOISIER</div>
+          <div class="fp-use"><span class="fr">Feuilles — tonique utérin traditionnel, prépare l'utérus. Usage populaire validé en phytothérapie.</span><span class="en">Leaves — traditional uterine tonic, prepares the uterus. Validated popular use in phytotherapy.</span><span class="ar-text ar">أوراق التوت — منشط الرحم التقليدي.</span></div>
+        </div>
+        <div class="feminin-warning"><span class="fr">⚠ Gattilier : éviter avec contraceptifs hormonaux, agonistes dopaminergiques.</span><span class="en">⚠ Vitex: avoid with hormonal contraceptives, dopamine agonists.</span><span class="ar-text ar">⚠ الغاتيلير: تجنب مع موانع الحمل الهرمونية.</span></div>
+      </div>
+
+      <div class="feminin-block">
+        <div class="fb-phase"><span class="fr">PHASE 2</span><span class="en">PHASE 2</span><span class="ar-text ar">المرحلة الثانية</span></div>
+        <div class="fb-title"><span class="fr">Fertilité & Préconception</span><span class="en">Fertility & Preconception</span><span class="ar-text ar">الخصوبة وما قبل الحمل</span></div>
+        <div class="fb-desc"><span class="fr">Soutien de la fertilité naturelle et équilibre hormonal</span><span class="en">Natural fertility support and hormonal balance</span><span class="ar-text ar">دعم الخصوبة الطبيعية والتوازن الهرموني</span></div>
+        <div class="feminin-plant">
+          <div class="fp-name">DONG QUAI</div>
+          <div class="fp-use"><span class="fr">Angelica sinensis — "ginseng féminin", régule le cycle, améliore la circulation utérine. Pilier de la MTC.</span><span class="en">Angelica sinensis — "female ginseng", regulates cycle, improves uterine circulation. TCM pillar.</span><span class="ar-text ar">أنجليكا سينينسيس — "الجنسنغ الأنثوي"، ينظم الدورة ويحسن الدورة الدموية الرحمية.</span></div>
+        </div>
+        <div class="feminin-plant">
+          <div class="fp-name">MACA</div>
+          <div class="fp-use"><span class="fr">Lepidium meyenii — adaptogène andin. Équilibre hormonal, libido, énergie. Études cliniques encourageantes sur la fertilité féminine.</span><span class="en">Lepidium meyenii — Andean adaptogen. Hormonal balance, libido, energy. Encouraging clinical studies on female fertility.</span><span class="ar-text ar">لبيديوم ميينيي — مكيف أنديزي. توازن هرموني وطاقة وخصوبة.</span></div>
+        </div>
+        <div class="feminin-plant">
+          <div class="fp-name">FENUGREC</div>
+          <div class="fp-use"><span class="fr">Trigonella foenum-graecum — phytohormones, soutient la lactation, régule la glycémie. Très utilisé en médecine traditionnelle arabe et ayurvédique.</span><span class="en">Trigonella foenum-graecum — phytohormones, supports lactation, regulates blood sugar. Widely used in Arab and Ayurvedic traditional medicine.</span><span class="ar-text ar">الحلبة — هرمونات نباتية، تدعم الإرضاع وتنظيم السكر. شائعة في الطب العربي والهندي.</span></div>
+        </div>
+        <div class="feminin-warning"><span class="fr">⚠ Dong Quai : éviter pendant la grossesse, avec anticoagulants.</span><span class="en">⚠ Dong Quai: avoid during pregnancy, with anticoagulants.</span><span class="ar-text ar">⚠ الدونغ كوي: تجنب خلال الحمل ومع مضادات التخثر.</span></div>
+      </div>
+
+      <div class="feminin-block">
+        <div class="fb-phase"><span class="fr">PHASE 3</span><span class="en">PHASE 3</span><span class="ar-text ar">المرحلة الثالثة</span></div>
+        <div class="fb-title"><span class="fr">Péri-ménopause & Ménopause</span><span class="en">Peri-menopause & Menopause</span><span class="ar-text ar">ما قبل انقطاع الطمث وانقطاعه</span></div>
+        <div class="fb-desc"><span class="fr">Gestion naturelle des symptômes climatériques</span><span class="en">Natural management of climacteric symptoms</span><span class="ar-text ar">الإدارة الطبيعية لأعراض سن اليأس</span></div>
+        <div class="feminin-plant">
+          <div class="fp-name">ACTÉE À GRAPPES</div>
+          <div class="fp-use"><span class="fr">Cimicifuga racemosa — bouffées de chaleur, sueurs nocturnes. Monographie EMA, niveau de preuve élevé. 40-80 mg/extrait/jour.</span><span class="en">Cimicifuga racemosa — hot flashes, night sweats. EMA monograph, high level of evidence. 40-80mg/extract/day.</span><span class="ar-text ar">سيميسيفوغا راسيموسا — الهبات الساخنة والتعرق الليلي. معتمدة من EMA.</span></div>
+        </div>
+        <div class="feminin-plant">
+          <div class="fp-name">SAUGE OFFICINALE</div>
+          <div class="fp-use"><span class="fr">Salvia officinalis — bouffées de chaleur, sueurs nocturnes, sécheresse. Phytooestrogènes. Validé EMA/ESCOP.</span><span class="en">Salvia officinalis — hot flashes, night sweats, dryness. Phytoestrogens. Validated by EMA/ESCOP.</span><span class="ar-text ar">المريمية — هبات ساخنة وجفاف. فيتوإستروجين. معتمدة من EMA.</span></div>
+        </div>
+        <div class="feminin-plant">
+          <div class="fp-name">TRÈFLE ROUGE</div>
+          <div class="fp-use"><span class="fr">Trifolium pratense — isoflavones, phytooestrogènes. Réduit les bouffées de chaleur de 40% selon méta-analyse 2022.</span><span class="en">Trifolium pratense — isoflavones, phytoestrogens. Reduces hot flashes by 40% according to 2022 meta-analysis.</span><span class="ar-text ar">البرسيم الأحمر — ايزوفلافون وفيتوإستروجين. يقلل الهبات بنسبة 40٪.</span></div>
+        </div>
+        <div class="feminin-warning"><span class="fr">⚠ Actée à grappes : hépatotoxicité rare rapportée. Antécédents de cancer hormono-dépendant : avis médical obligatoire.</span><span class="en">⚠ Black cohosh: rare hepatotoxicity reported. Hormone-dependent cancer history: medical advice required.</span><span class="ar-text ar">⚠ سيميسيفوغا: سمية نادرة للكبد. تاريخ سرطان هرموني: استشر الطبيب.</span></div>
+      </div>
+
+      <div class="feminin-block">
+        <div class="fb-phase"><span class="fr">BIEN-ÊTRE GLOBAL</span><span class="en">OVERALL WELLNESS</span><span class="ar-text ar">الرفاهية الشاملة</span></div>
+        <div class="fb-title"><span class="fr">Équilibre & Vitalité au Quotidien</span><span class="en">Daily Balance & Vitality</span><span class="ar-text ar">التوازن والحيوية اليومية</span></div>
+        <div class="fb-desc"><span class="fr">Stress, peau, os, énergie — pour chaque étape de la vie</span><span class="en">Stress, skin, bones, energy — for every stage of life</span><span class="ar-text ar">التوتر والجلد والعظام والطاقة في كل مرحلة من الحياة</span></div>
+        <div class="feminin-plant">
+          <div class="fp-name">ASHWAGANDHA</div>
+          <div class="fp-use"><span class="fr">Adaptogène — réduit le cortisol, améliore le sommeil et la libido féminine. Essai clinique 2023 : -30% de stress perçu.</span><span class="en">Adaptogen — reduces cortisol, improves sleep and female libido. 2023 clinical trial: -30% perceived stress.</span><span class="ar-text ar">مكيف — يقلل الكورتيزول ويحسن النوم والرغبة الجنسية.</span></div>
+        </div>
+        <div class="feminin-plant">
+          <div class="fp-name">LITHOTHAMNIUM</div>
+          <div class="fp-use"><span class="fr">Algue rouge calcaire — calcium biodisponible pour la densité osseuse post-ménopause. Prévention naturelle de l'ostéoporose.</span><span class="en">Calcareous red algae — bioavailable calcium for post-menopausal bone density. Natural osteoporosis prevention.</span><span class="ar-text ar">أعشاب حمراء جيرية — كالسيوم متاح بيولوجياً لكثافة العظام بعد انقطاع الطمث.</span></div>
+        </div>
+        <div class="feminin-plant">
+          <div class="fp-name">ORTIE</div>
+          <div class="fp-use"><span class="fr">Urtica dioica — fer hautement biodisponible, idéale lors des règles abondantes. Minéraux, vitamine C. Validé EMA.</span><span class="en">Urtica dioica — highly bioavailable iron, ideal for heavy periods. Minerals, vitamin C. EMA validated.</span><span class="ar-text ar">حشيشة القراص — حديد عالي التوافر البيولوجي، مثالي للحيض الغزير.</span></div>
+        </div>
+        <div class="feminin-warning"><span class="fr">⚠ Toujours consulter un gynécologue avant toute phytothérapie hormonale. Les plantes ne remplacent pas un suivi médical.</span><span class="en">⚠ Always consult a gynecologist before any hormonal phytotherapy. Plants do not replace medical follow-up.</span><span class="ar-text ar">⚠ استشر طبيب النساء دائماً قبل أي علاج نباتي هرموني.</span></div>
+      </div>
+
+    </div>
+
+    <div class="feminin-banner reveal">
+      <p><span class="fr">✦ La phytothérapie féminine est l'une des branches les plus documentées historiquement. Depuis les papyrus égyptiens jusqu'aux monographies EMA modernes, les plantes ont toujours accompagné les femmes à chaque étape de leur vie.</span><span class="en">✦ Women's phytotherapy is one of the most historically documented branches. From Egyptian papyri to modern EMA monographs, plants have always accompanied women at every stage of their lives.</span><span class="ar-text ar">✦ العلاج النباتي للمرأة هو أحد أكثر الفروع توثيقاً تاريخياً. من البرديات المصرية إلى مستندات EMA الحديثة.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNAL -->
+<section id="journal" class="journal-section">
+  <div class="journal-inner">
+    <div class="journal-the reveal"><span class="fr">La Revue</span><span class="en">The</span><span class="ar-text ar">مجلة</span></div>
+    <div class="journal-name reveal">HERBALIST JOURNAL</div>
+    <div class="journal-subtitle reveal"><span class="fr">Actualité scientifique · Minceur · Longévité · MTC · Vétérinaire</span><span class="en">Scientific news · Slimming · Longevity · TCM · Veterinary</span><span class="ar-text ar">أخبار علمية · تخسيس · طول العمر · الطب الصيني · بيطرة</span></div>
+    <div class="journal-divider reveal"><div class="jdl"></div><div class="jdo">✦</div><div class="jdl"></div></div>
+
+    <div class="journal-grid reveal">
+      <div class="journal-card featured-article">
+        <div class="jcard-category cat-research"><span class="fr">Recherche clinique</span><span class="en">Clinical research</span><span class="ar-text ar">بحث سريري</span></div>
+        <div class="jcard-title"><span class="fr">La curcumine réduit les marqueurs inflammatoires : méta-analyse de 22 essais randomisés</span><span class="en">Curcumin reduces inflammatory markers: meta-analysis of 22 randomized trials</span><span class="ar-text ar">الكركمين يقلل مؤشرات الالتهاب: تحليل تلوي لـ ٢٢ تجربة عشوائية</span></div>
+        <div class="jcard-excerpt"><span class="fr">Une méta-analyse publiée dans le Journal of Nutritional Biochemistry confirme l'effet anti-inflammatoire significatif de la curcumine sur les niveaux de CRP et d'IL-6 chez les patients atteints de maladies métaboliques — avec un impact direct sur la gestion du poids.</span><span class="en">A meta-analysis published in the Journal of Nutritional Biochemistry confirms the significant anti-inflammatory effect of curcumin on CRP and IL-6 levels in patients with metabolic diseases — with a direct impact on weight management.</span><span class="ar-text ar">تؤكد دراسة تلوية أن الكركمين يخفض مستويات CRP وIL-6 لدى مرضى الأمراض الاستقلابية مع تأثير مباشر على إدارة الوزن.</span></div>
+        <div class="jcard-meta"><span class="jcard-date fr">Février 2026</span><span class="jcard-date en">February 2026</span><span class="jcard-date ar-text ar">فبراير ٢٠٢٦</span><span class="jcard-source">PubMed · J. Nutritional Biochemistry</span></div>
+      </div>
+      <div class="journal-card">
+        <div class="jcard-category cat-slim"><span class="fr">Minceur & Métabolisme</span><span class="en">Slimming</span><span class="ar-text ar">التخسيس</span></div>
+        <div class="jcard-title"><span class="fr">Thé vert matcha : 12 semaines de supplémentation réduisent la graisse abdominale de 14%</span><span class="en">Matcha green tea: 12 weeks of supplementation reduces abdominal fat by 14%</span><span class="ar-text ar">شاي ماتشا الأخضر: ١٢ أسبوعاً يقلل الدهون البطنية بنسبة ١٤٪</span></div>
+        <div class="jcard-excerpt"><span class="fr">Un essai contrôlé sur 120 femmes en surpoids démontre qu'une consommation quotidienne de 2g de matcha réduit significativement la graisse viscérale et améliore les marqueurs métaboliques.</span><span class="en">A controlled trial on 120 overweight women demonstrates that daily consumption of 2g of matcha significantly reduces visceral fat and improves metabolic markers.</span><span class="ar-text ar">تجربة على ١٢٠ امرأة تثبت أن استهلاك ٢ غ يومياً يقلل الدهون الحشوية.</span></div>
+        <div class="jcard-meta"><span class="jcard-date fr">Janvier 2026</span><span class="jcard-source">Int. J. Obesity</span></div>
+      </div>
+      <div class="journal-card">
+        <div class="jcard-category cat-longevity"><span class="fr">Longévité</span><span class="en">Longevity</span><span class="ar-text ar">طول العمر</span></div>
+        <div class="jcard-title"><span class="fr">Astragale et télomères : la plante qui ralentit le vieillissement cellulaire</span><span class="en">Astragalus and telomeres: the plant that slows cellular aging</span><span class="ar-text ar">الأستراغالوس والتيلوميرات: النبات الذي يبطئ الشيخوخة الخلوية</span></div>
+        <div class="jcard-excerpt"><span class="fr">Des chercheurs de l'Université de Californie publient des résultats sur la cycloastragénol, molécule extraite de l'astragale, qui active la télomérase et allonge les télomères — marqueurs biologiques du vieillissement.</span><span class="en">UC researchers publish findings on cycloastragenol, a molecule extracted from astragalus, which activates telomerase and lengthens telomeres — biological markers of aging.</span><span class="ar-text ar">باحثون من جامعة كاليفورنيا ينشرون نتائج حول السيكلوأستراجينول الذي ينشط إنزيم التيلوميراز.</span></div>
+        <div class="jcard-meta"><span class="jcard-date fr">Décembre 2025</span><span class="jcard-source">Nature Aging</span></div>
+      </div>
+      <div class="journal-card">
+        <div class="jcard-category cat-tcm"><span class="fr">Médecine Chinoise</span><span class="en">TCM</span><span class="ar-text ar">الطب الصيني</span></div>
+        <div class="jcard-title"><span class="fr">Réishi et immunité : les bêta-glucanes améliorent la réponse NK de 40% en 8 semaines</span><span class="en">Reishi and immunity: beta-glucans improve NK response by 40% in 8 weeks</span><span class="ar-text ar">الريشي والمناعة: بيتا-جلوكان يحسن استجابة NK بنسبة ٤٠٪</span></div>
+        <div class="jcard-excerpt"><span class="fr">Une étude coréenne randomisée démontre que la supplémentation en Ganoderma lucidum améliore significativement l'activité des cellules NK et des lymphocytes T — confirmant l'usage traditionnel millénaire.</span><span class="en">A Korean randomized study shows that Ganoderma lucidum supplementation significantly improves NK cell and T-lymphocyte activity — confirming millennial traditional use.</span><span class="ar-text ar">دراسة كورية عشوائية تثبت أن الجانوديرما تحسن نشاط خلايا NK ولمفاويات T.</span></div>
+        <div class="jcard-meta"><span class="jcard-date fr">Novembre 2025</span><span class="jcard-source">J. Ethnopharmacology</span></div>
+      </div>
+      <div class="journal-card">
+        <div class="jcard-category cat-vet"><span class="fr">Vétérinaire</span><span class="en">Veterinary</span><span class="ar-text ar">بيطرة</span></div>
+        <div class="jcard-title"><span class="fr">Harpagophytum chez le cheval de sport : réduction de 35% des marqueurs d'inflammation articulaire</span><span class="en">Harpagophytum in sport horses: 35% reduction in joint inflammation markers</span><span class="ar-text ar">الهارباغوفيتوم في خيول الرياضة: تخفيض ٣٥٪ لمؤشرات التهاب المفاصل</span></div>
+        <div class="jcard-excerpt"><span class="fr">Un essai clinique mené sur 60 chevaux de compétition démontre l'efficacité de l'harpagophytum sur les douleurs articulaires post-effort, ouvrant la voie à une alternative naturelle aux AINS vétérinaires.</span><span class="en">A clinical trial on 60 competition horses demonstrates the effectiveness of harpagophytum on post-exercise joint pain, opening the way for a natural alternative to veterinary NSAIDs.</span><span class="ar-text ar">تجربة سريرية على ٦٠ حصاناً تثبت فاعلية الهارباغوفيتوم على آلام المفاصل بعد المجهود.</span></div>
+        <div class="jcard-meta"><span class="jcard-date fr">Octobre 2025</span><span class="jcard-source">J. Vet. Pharmacology</span></div>
+      </div>
+      <div class="journal-card">
+        <div class="jcard-category cat-discovery"><span class="fr">Projets monde</span><span class="en">World projects</span><span class="ar-text ar">مشاريع العالم</span></div>
+        <div class="jcard-title"><span class="fr">Algérie : valorisation du patrimoine phytothérapeutique — une opportunité d'export inexploitée</span><span class="en">Algeria: valorization of phytotherapeutic heritage — an unexplored export opportunity</span><span class="ar-text ar">الجزائر: تثمين التراث العشبي — فرصة تصدير غير مستغلة</span></div>
+        <div class="jcard-excerpt"><span class="fr">L'Algérie possède plus de 3 000 espèces végétales dont 400 à usage médicinal reconnu. Le marché mondial des plantes médicinales atteindra 550 milliards $ en 2030. Une opportunité stratégique pour développer des filières bio certifiées.</span><span class="en">Algeria has over 3,000 plant species of which 400 have recognized medicinal use. The global medicinal plant market will reach $550 billion by 2030. A strategic opportunity to develop certified organic supply chains.</span><span class="ar-text ar">تمتلك الجزائر أكثر من ٣٠٠٠ نوع نباتي منها ٤٠٠ ذات استخدام طبي معترف به. سوق عالمي يصل ٥٥٠ مليار دولار بحلول ٢٠٣٠.</span></div>
+        <div class="jcard-meta"><span class="jcard-date fr">Septembre 2025</span><span class="jcard-source">FAO · WHO · Herbalist World</span></div>
+      </div>
+    </div>
+
+    <div class="reveal" style="text-align:center;padding:32px;background:var(--forest);border:1px solid rgba(90,154,64,0.2);">
+      <p style="font-family:'Cormorant Garamond',serif;font-size:19px;color:rgba(168,216,128,0.75);font-style:italic;margin-bottom:18px;">
+        <span class="fr">Abonnez-vous pour recevoir chaque semaine les dernières découvertes</span>
+        <span class="en">Subscribe to receive the latest discoveries every week</span>
+        <span class="ar-text ar">اشترك لتلقي أحدث الاكتشافات كل أسبوع</span>
+      </p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <a href="#newsletter" class="btn-p"><span class="fr">S'abonner</span><span class="en">Subscribe</span><span class="ar-text ar">اشترك</span></a>
+        <a href="#" class="btn-o"><span class="fr">Tous les articles</span><span class="en">All articles</span><span class="ar-text ar">جميع المقالات</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="about-section">
+  <div class="about-inner">
+    <div>
+      <div class="about-eyebrow"><span class="fr">Notre engagement</span><span class="en">Our commitment</span><span class="ar-text ar">التزامنا</span></div>
+      <h2 class="about-title"><span class="fr">Une démarche rigoureusement académique</span><span class="en">A rigorously academic approach</span><span class="ar-text ar">نهج أكاديمي صارم</span></h2>
+      <p class="about-txt fr">Herbalist World couvre les plantes médicinales occidentales, la médecine traditionnelle chinoise, la phytothérapie vétérinaire et les projets de culture à travers le monde — avec la même rigueur scientifique.</p>
+      <p class="about-txt en">Herbalist World covers western medicinal plants, traditional Chinese medicine, veterinary phytotherapy and cultivation projects around the world — with the same scientific rigor.</p>
+      <p class="about-txt ar-text ar" style="font-family:'Amiri',serif;font-size:17px;">يغطي عالم الأعشاب النباتات الطبية الغربية والطب الصيني التقليدي والعلاج النباتي البيطري ومشاريع الزراعة حول العالم — بنفس الصرامة العلمية.</p>
+      <p class="about-txt" style="color:rgba(168,216,128,0.35);font-style:italic;font-size:14px;font-family:'Cormorant Garamond',serif;">
+        <span class="fr">Le contenu est à des fins éducatives uniquement. Consultez toujours un professionnel de santé.</span>
+        <span class="en">Content is for educational purposes only. Always consult a healthcare professional.</span>
+        <span class="ar-text ar" style="font-family:'Amiri',serif;font-style:normal;">المحتوى لأغراض تعليمية فقط. استشر دائماً متخصصاً في الرعاية الصحية.</span>
+      </p>
+    </div>
+    <div>
+      <p style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:var(--sage);margin-bottom:16px;"><span class="fr">SOURCES DE RÉFÉRENCE</span><span class="en">REFERENCE SOURCES</span><span class="ar-text ar" style="font-family:'Amiri',serif;letter-spacing:0;font-size:13px;">المصادر المرجعية</span></p>
+      <div class="src-grid">
+        <div class="src-card"><div class="src-name">PubMed / NCBI</div><div class="src-desc fr">Études cliniques peer-reviewed</div><div class="src-desc en">Peer-reviewed clinical studies</div><div class="src-desc ar-text ar">دراسات سريرية محكّمة</div></div>
+        <div class="src-card"><div class="src-name">EMA / HMPC</div><div class="src-desc fr">Monographies officielles européennes</div><div class="src-desc en">Official European monographs</div><div class="src-desc ar-text ar">الأوروبية الرسمية</div></div>
+        <div class="src-card"><div class="src-name">WHO Monographs</div><div class="src-desc fr">Organisation Mondiale de la Santé</div><div class="src-desc en">World Health Organization</div><div class="src-desc ar-text ar">منظمة الصحة العالمية</div></div>
+        <div class="src-card"><div class="src-name">Chinese Pharmacopoeia</div><div class="src-desc fr">Pharmacopée officielle chinoise</div><div class="src-desc en">Official Chinese Pharmacopoeia</div><div class="src-desc ar-text ar">دستور الأدوية الصيني الرسمي</div></div>
+        <div class="src-card"><div class="src-name">Larousse Médical</div><div class="src-desc fr">Encyclopédie de référence</div><div class="src-desc en">Reference encyclopedia</div><div class="src-desc ar-text ar">موسوعة مرجعية</div></div>
+        <div class="src-card"><div class="src-name">ESCOP / AHPA</div><div class="src-desc fr">Phytothérapie scientifique Europe/USA</div><div class="src-desc en">Scientific phytotherapy EU/USA</div><div class="src-desc ar-text ar">العلاج النباتي العلمي</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter" class="nl-section">
+  <div class="nl-inner">
+    <h2 class="nl-title"><span class="fr">La Lettre Botanique</span><span class="en">The Botanical Letter</span><span class="ar-text ar">النشرة النباتية</span></h2>
+    <p class="nl-sub"><span class="fr">Plantes · Minceur · MTC · Vétérinaire · Monde — chaque semaine</span><span class="en">Plants · Slimming · TCM · Veterinary · World — every week</span><span class="ar-text ar">نباتات · تخسيس · الطب الصيني · بيطرة · العالم — كل أسبوع</span></p>
+    <div class="nl-form">
+      <input type="email" class="nl-input" placeholder="votre@email.com">
+      <button class="nl-btn"><span class="fr">S'ABONNER</span><span class="en">SUBSCRIBE</span><span class="ar-text ar">اشترك</span></button>
+    </div>
+    <p class="nl-note"><span class="fr">Gratuit · Sans publicité · En 3 langues</span><span class="en">Free · Ad-free · In 3 languages</span><span class="ar-text ar">مجاني · بدون إعلانات · بـ ٣ لغات</span></p>
+  </div>
+</section>
+
+<!-- SOCIAL -->
+<section class="social-section">
+  <p class="social-title"><span class="fr">NOUS SUIVRE</span><span class="en">FOLLOW US</span><span class="ar-text ar">تابعونا</span></p>
+  <div class="social-links">
+    <a href="#" class="social-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg> Facebook</a>
+    <a href="#" class="social-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg> Instagram</a>
+    <a href="#" class="social-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg> Pinterest</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="fbrand">HERBALIST</div>
+      <div class="fbrand-world">WORLD</div>
+      <p class="ftagline"><span class="fr">L'encyclopédie mondiale des plantes médicinales</span><span class="en">The world encyclopedia of medicinal plants</span><span class="ar-text ar" style="font-family:'Amiri',serif;">الموسوعة العالمية للنباتات الطبية</span></p>
+      <p class="fdisclaimer"><span class="fr">Contenu éducatif uniquement. Ne constitue pas un avis médical ni vétérinaire. Consultez toujours un professionnel qualifié.</span><span class="en">Educational content only. Does not constitute medical or veterinary advice. Always consult a qualified professional.</span><span class="ar-text ar" style="font-family:'Amiri',serif;">محتوى تعليمي فقط. لا يشكل نصيحة طبية أو بيطرية.</span></p>
+    </div>
+    <div>
+      <div class="fcol-title"><span class="fr">EXPLORER</span><span class="en">EXPLORE</span><span class="ar-text ar">استكشف</span></div>
+      <ul class="flinks">
+        <li><a href="#plantes"><span class="fr">Encyclopédie</span><span class="en">Encyclopedia</span><span class="ar-text ar">الموسوعة</span></a></li>
+        <li><a href="#wellness"><span class="fr">Minceur & Longévité</span><span class="en">Slimming & Longevity</span><span class="ar-text ar">التخسيس وطول العمر</span></a></li>
+        <li><a href="#tcm"><span class="fr">Médecine Chinoise</span><span class="en">Chinese Medicine</span><span class="ar-text ar">الطب الصيني</span></a></li>
+        <li><a href="#vet"><span class="fr">Vétérinaire</span><span class="en">Veterinary</span><span class="ar-text ar">البيطرة</span></a></li>
+        <li><a href="#world"><span class="fr">Projets Monde</span><span class="en">World Projects</span><span class="ar-text ar">مشاريع العالم</span></a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="fcol-title"><span class="fr">JOURNAL</span><span class="en">JOURNAL</span><span class="ar-text ar">المجلة</span></div>
+      <ul class="flinks">
+        <li><a href="#journal"><span class="fr">Recherche clinique</span><span class="en">Clinical research</span><span class="ar-text ar">بحث سريري</span></a></li>
+        <li><a href="#journal"><span class="fr">Minceur</span><span class="en">Slimming</span><span class="ar-text ar">تخسيس</span></a></li>
+        <li><a href="#journal"><span class="fr">Longévité</span><span class="en">Longevity</span><span class="ar-text ar">طول العمر</span></a></li>
+        <li><a href="#journal"><span class="fr">MTC</span><span class="en">TCM</span><span class="ar-text ar">الطب الصيني</span></a></li>
+        <li><a href="#journal"><span class="fr">Vétérinaire</span><span class="en">Veterinary</span><span class="ar-text ar">بيطرة</span></a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="fcol-title"><span class="fr">LANGUES</span><span class="en">LANGUAGES</span><span class="ar-text ar">اللغات</span></div>
+      <ul class="flinks">
+        <li><a href="#" onclick="setLang('fr')">Français</a></li>
+        <li><a href="#" onclick="setLang('en')">English</a></li>
+        <li><a href="#" onclick="setLang('ar')" style="font-family:'Amiri',serif;">العربية</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="fcopy">© 2026 Herbalist World · herbalist.world</span>
+    <div class="flegal">
+      <a href="#"><span class="fr">Mentions légales</span><span class="en">Legal</span><span class="ar-text ar">إشعار قانوني</span></a>
+      <a href="#"><span class="fr">Confidentialité</span><span class="en">Privacy</span><span class="ar-text ar">الخصوصية</span></a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── LANGUAGE SWITCHER ──
+const PLANTS = [
+  {fr:'Camomille',en:'Chamomile',ar:'البابونج',cat_fr:'Digestif · Sommeil',cat_en:'Digestive · Sleep',cat_ar:'هضمي · نوم'},
+  {fr:'Lavande',en:'Lavender',ar:'الخزامى',cat_fr:'Anxiété · Sommeil',cat_en:'Anxiety · Sleep',cat_ar:'قلق · نوم'},
+  {fr:'Gingembre',en:'Ginger',ar:'الزنجبيل',cat_fr:'Nausées · Anti-inflammatoire',cat_en:'Nausea · Anti-inflammatory',cat_ar:'غثيان · مضاد التهاب'},
+  {fr:'Menthe poivrée',en:'Peppermint',ar:'النعناع الفلفلي',cat_fr:'Digestif · Céphalées',cat_en:'Digestive · Headaches',cat_ar:'هضمي · صداع'},
+  {fr:'Valériane',en:'Valerian',ar:'الحشيشة الطيبة',cat_fr:'Insomnie · Nervosité',cat_en:'Insomnia · Nervousness',cat_ar:'أرق · توتر'},
+  {fr:'Échinacée',en:'Echinacea',ar:'القنفذية',cat_fr:'Immunité',cat_en:'Immunity',cat_ar:'مناعة'},
+  {fr:'Millepertuis',en:"St. John's Wort",ar:'نبتة القديس يوحنا',cat_fr:'Dépression légère',cat_en:'Mild depression',cat_ar:'اكتئاب خفيف'},
+  {fr:'Ashwagandha',en:'Ashwagandha',ar:'الأشواغاندا',cat_fr:'Longévité · Stress',cat_en:'Longevity · Stress',cat_ar:'طول العمر · التوتر'},
+  {fr:'Ginseng',en:'Ginseng',ar:'الجنسنغ',cat_fr:'Énergie · MTC',cat_en:'Energy · TCM',cat_ar:'طاقة · الطب الصيني'},
+  {fr:'Moringa',en:'Moringa',ar:'المورينغا',cat_fr:'Longévité · Nutrition',cat_en:'Longevity · Nutrition',cat_ar:'طول العمر · تغذية'},
+  {fr:'Curcuma',en:'Turmeric',ar:'الكركم',cat_fr:'Anti-inflammatoire · Minceur',cat_en:'Anti-inflammatory · Slimming',cat_ar:'مضاد التهاب · تخسيس'},
+  {fr:'Thé vert',en:'Green tea',ar:'الشاي الأخضر',cat_fr:'Minceur · Antioxydant',cat_en:'Slimming · Antioxidant',cat_ar:'تخسيس · مضاد أكسدة'},
+  {fr:'Réishi',en:'Reishi',ar:'فطر الريشي',cat_fr:'Immunité · MTC',cat_en:'Immunity · TCM',cat_ar:'مناعة · الطب الصيني'},
+  {fr:'Schisandra',en:'Schisandra',ar:'الشيساندرا',cat_fr:'Foie · MTC',cat_en:'Liver · TCM',cat_ar:'الكبد · الطب الصيني'},
+  {fr:'Pissenlit',en:'Dandelion',ar:'الهندباء',cat_fr:'Minceur · Détox',cat_en:'Slimming · Detox',cat_ar:'تخسيس · إزالة السموم'},
+];
+
+let currentLang = 'fr';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.body.classList.remove('lang-en','lang-ar');
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  if(lang === 'en') document.body.classList.add('lang-en');
+  if(lang === 'ar') document.body.classList.add('lang-ar');
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  const map = {fr:0,en:1,ar:2};
+  document.querySelectorAll('.lang-btn')[map[lang]].classList.add('active');
+  const titles = {fr:'Herbalist World — Encyclopédie des Plantes Médicinales',en:'Herbalist World — Encyclopedia of Medicinal Plants',ar:'عالم الأعشاب — موسوعة النباتات الطبية'};
+  document.title = titles[lang];
+  const placeholders = {fr:'Rechercher une plante…',en:'Search a plant…',ar:'ابحث عن نبات…'};
+  document.getElementById('searchInput').placeholder = placeholders[lang];
+}
+
+// ── SEARCH ──
+let searchOpen = false;
+function toggleSearch() {
+  searchOpen = !searchOpen;
+  const inp = document.getElementById('searchInput');
+  inp.classList.toggle('open', searchOpen);
+  if(searchOpen) inp.focus();
+  else { inp.value=''; document.getElementById('searchResults').classList.remove('show'); }
+}
+function closeSearch() {
+  setTimeout(()=>{ document.getElementById('searchResults').classList.remove('show'); }, 200);
+}
+function doSearch(q) {
+  const res = document.getElementById('searchResults');
+  if(!q || q.length < 2) { res.classList.remove('show'); return; }
+  q = q.toLowerCase();
+  const matches = PLANTS.filter(p =>
+    p.fr.toLowerCase().includes(q) || p.en.toLowerCase().includes(q) || p.ar.includes(q)
+  ).slice(0,6);
+  if(!matches.length) { res.classList.remove('show'); return; }
+  res.innerHTML = matches.map(p => {
+    const name = currentLang==='ar' ? p.ar : currentLang==='en' ? p.en : p.fr;
+    const cat  = currentLang==='ar' ? p.cat_ar : currentLang==='en' ? p.cat_en : p.cat_fr;
+    return `<div class="sr-item" onclick=""><div class="sr-name">${name}</div><div class="sr-cat">${cat}</div></div>`;
+  }).join('');
+  res.classList.add('show');
+}
+
+// ── SCROLL REVEAL ──
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e,i) => {
+    if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),i*80); obs.unobserve(e.target); }
+  });
+},{threshold:0.07});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// ── NAV SHADOW ──
+window.addEventListener('scroll',()=>{
+  document.querySelector('nav').style.boxShadow = window.scrollY>60 ? '0 2px 20px rgba(0,0,0,0.08)' : 'none';
+});
+</script>
+</body>
+</html>
